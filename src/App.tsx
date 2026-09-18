@@ -1,0 +1,1046 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { 
+  ArrowRight, Menu, X, Globe, Smartphone, Database, 
+  BrainCircuit, ScanEye, Cpu, CheckCircle2, Target, AtSign
+} from 'lucide-react';
+
+import Lenis from '@studio-freight/lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const App = () => {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [activeServiceIdx, setActiveServiceIdx] = useState(0);
+      const shouldReduceMotion = useReducedMotion();
+      const { scrollY } = useScroll();
+      
+      // Form State
+      const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+      const [formErrors, setFormErrors] = useState({ name: '', email: '', message: '' });
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [submitStatus, setSubmitStatus] = useState(null); // null | 'success' | 'error'
+    
+      const handleContactSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Validation
+        const errors = { name: '', email: '', message: '' };
+        let isValid = true;
+        
+        if (!formData.name.trim()) { errors.name = 'Name is required'; isValid = false; }
+        if (!formData.email.trim()) { 
+          errors.email = 'Email is required'; isValid = false; 
+        } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+          errors.email = 'Please enter a valid email'; isValid = false;
+        }
+        if (!formData.message.trim()) { errors.message = 'Message is required'; isValid = false; }
+        
+        setFormErrors(errors);
+        if (!isValid) return;
+        
+        setIsSubmitting(true);
+        setSubmitStatus(null);
+        
+        try {
+          const response = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              access_key: "YOUR_ACCESS_KEY_HERE",
+              name: formData.name,
+              email: formData.email,
+              message: formData.message,
+            }),
+          });
+          
+          const result = await response.json();
+          if (result.success) {
+            setSubmitStatus('success');
+            setFormData({ name: '', email: '', message: '' });
+          } else {
+            setSubmitStatus('error');
+          }
+        } catch (error) {
+          console.error('EmailJS Error:', error);
+          setSubmitStatus('error');
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      const heroY = useTransform(scrollY, [0, 800], [0, 200]);
+      const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+
+      useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 50);
+        window.addEventListener('scroll', handleScroll);
+        
+        // Initialize Lenis for smooth scrolling
+        const lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          touchMultiplier: 2,
+        });
+
+        // Integrate Lenis with GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+
+        gsap.ticker.add((time) => {
+          lenis.raf(time * 1000);
+        });
+
+        gsap.ticker.lagSmoothing(0, 0);
+
+        // GSAP ScrollTrigger Animations
+        const gsapReveals = document.querySelectorAll('.gsap-reveal');
+        gsapReveals.forEach((elem) => {
+          gsap.fromTo(elem, 
+            { opacity: 0, y: 50 }, 
+            { 
+              opacity: 1, 
+              y: 0, 
+              duration: 1, 
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: elem,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+              }
+            }
+          );
+        });
+
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+          lenis.destroy();
+        };
+      }, []);
+
+      const navLinks = [
+        { name: 'About', href: '#about' },
+        { name: 'What We Do', href: '#what-we-do' },
+        { name: 'Products', href: '#products' },
+        { name: 'Services', href: '#services' },
+        { name: 'Leadership', href: '#leadership' },
+      ];
+
+      const handleScrollTo = (e, targetId) => {
+        e.preventDefault();
+        const element = document.getElementById(targetId.replace('#', ''));
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+        setMobileMenuOpen(false);
+      };
+
+      const revealUp = {
+        hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+      };
+
+      const sectionProps = {
+        initial: "hidden",
+        whileInView: "visible",
+        viewport: { once: true, margin: "-10%" },
+        variants: {
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-white text-black antialiased selection:bg-accent selection:text-black">
+          
+          {/* 1. NAVBAR */}
+          <motion.nav 
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-2xl py-4 border-b border-gray-200' : 'bg-transparent py-6'}`}
+          >
+            <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+              <a href="#" className="text-2xl font-black tracking-tight text-black uppercase flex items-center gap-2 group">
+                <div className="w-6 h-6 bg-blue-600 rounded-sm group-hover:rotate-90 transition-transform duration-500"></div>
+                ORVANTEN
+              </a>
+              
+              <div className="hidden lg:flex items-center gap-10">
+                {navLinks.map((link) => (
+                  <a 
+                    key={link.name} 
+                    href={link.href} 
+                    onClick={(e) => handleScrollTo(e, link.href)}
+                    className="relative text-sm font-bold text-gray-700 hover:text-black transition-colors uppercase tracking-wide group py-1"
+                  >
+                    {link.name}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
+                  </a>
+                ))}
+                <a 
+                  href="#contact" 
+                  onClick={(e) => handleScrollTo(e, '#contact')}
+                  className="bg-white text-black px-6 py-2.5 text-sm font-bold uppercase tracking-wide hover:bg-gray-200 transition-colors rounded-sm"
+                >
+                  Contact Us
+                </a>
+              </div>
+
+              <button className="lg:hidden text-black transition-transform hover:scale-110" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
+          </motion.nav>
+
+          {/* MOBILE SIDEBAR */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div 
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                className="fixed inset-y-0 right-0 w-64 bg-white shadow-2xl z-40 p-6 pt-24 border-l border-gray-100 flex flex-col gap-6 lg:hidden"
+              >
+                {navLinks.map((link) => (
+                  <a 
+                    key={link.name} 
+                    href={link.href} 
+                    onClick={(e) => handleScrollTo(e, link.href)}
+                    className="text-lg font-bold text-gray-800 hover:text-blue-600 transition-colors uppercase tracking-wide"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+                <a 
+                  href="#contact" 
+                  onClick={(e) => handleScrollTo(e, '#contact')}
+                  className="bg-blue-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wide hover:bg-blue-700 transition-colors rounded-xl shadow-[0_10px_20px_rgba(37,99,235,0.2)] mt-4 text-center"
+                >
+                  Contact Us
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* 2. HERO */}
+          <section className="relative min-h-screen flex items-center pt-24 bg-white overflow-hidden border-b border-gray-100">
+            {/* Animated Grid Background */}
+            <motion.div 
+               animate={{ backgroundPosition: ['0px 0px', '64px 64px'] }}
+               transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
+               className="absolute inset-0 z-0 opacity-100 pointer-events-none" 
+               style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px)', backgroundSize: '64px 64px' }}
+            />
+            
+            {/* Drifting glowing orbs */}
+            <motion.div 
+              animate={{ 
+                x: [0, 150, -100, 0],
+                y: [0, -100, 150, 0],
+                scale: [1, 1.4, 0.7, 1],
+                rotate: [0, 90, -90, 0]
+              }}
+              transition={{ repeat: Infinity, duration: 12, ease: "easeInOut" }}
+              className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/15 blur-[100px] rounded-full pointer-events-none z-0"
+            />
+
+            <motion.div 
+              animate={{ 
+                x: [0, -150, 120, 0],
+                y: [0, 120, -150, 0],
+                scale: [1, 1.3, 0.8, 1],
+                rotate: [0, -90, 90, 0]
+              }}
+              transition={{ repeat: Infinity, duration: 18, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-purple-500/15 blur-[120px] rounded-full pointer-events-none z-0"
+            />
+
+            <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
+              <div className="max-w-4xl">
+                
+                <motion.h1 
+                  animate={{ y: [0, -25, 0], scale: [1, 1.02, 1] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  className="text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] font-black uppercase tracking-tighter leading-[0.9] mb-8 flex flex-col"
+                >
+                  <div className="overflow-hidden pb-2">
+                    <motion.span 
+                      initial={{ y: '110%', rotateZ: 5 }} 
+                      animate={{ y: 0, rotateZ: 0 }} 
+                      transition={{ duration: 1, type: "spring", bounce: 0.6, delay: 0.1 }}
+                      className="block text-transparent bg-clip-text text-gradient-animate origin-bottom-left"
+                    >
+                      BUILDING
+                    </motion.span>
+                  </div>
+                  <div className="overflow-hidden pb-4">
+                    <motion.span 
+                      initial={{ y: '110%', rotateZ: 5 }} 
+                      animate={{ y: 0, rotateZ: 0 }} 
+                      transition={{ duration: 1, type: "spring", bounce: 0.6, delay: 0.25 }}
+                      className="block text-transparent bg-clip-text text-gradient-animate origin-bottom-left"
+                    >
+                      THE FUTURE.
+                    </motion.span>
+                  </div>
+                </motion.h1>
+                
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+                  className="text-xl md:text-2xl text-gray-600 font-medium leading-relaxed max-w-2xl mb-10"
+                >
+                  Orvanten Technology designs proprietary innovation and delivers high-end custom engineering — from scalable web platforms to intelligent AI systems.
+                </motion.p>
+                
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
+                >
+                  <a 
+                    href="#products" 
+                    onClick={(e) => handleScrollTo(e, '#products')}
+                    className="inline-flex bg-blue-600 text-white px-8 py-4 text-sm font-bold uppercase tracking-wide hover:bg-blue-700 hover:-translate-y-1 transition-all items-center gap-3 rounded-xl shadow-[0_20px_40px_rgba(37,99,235,0.2)] hover:shadow-[0_20px_60px_rgba(37,99,235,0.4)] group"
+                  >
+                    Explore Our Work
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </motion.div>
+                
+              </div>
+            </motion.div>
+          </section>
+
+          {/* 3. ABOUT (Light Band) */}
+          <motion.section id="about" className="py-24 md:py-32 bg-gray-50 text-black relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
+                ABOUT US
+              </motion.h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <motion.div variants={revealUp}>
+                  <p className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-6">
+                    Orvanten Technology is a product-and-services technology company.
+                  </p>
+                  <p className="text-lg text-gray-600 font-medium">
+                    We build our own innovation-driven products, and we partner with businesses and organizations to turn their ideas into real, working technology — from architecture through deployment.
+                  </p>
+                </motion.div>
+                <div className="grid gap-8">
+                  {[
+                    { title: "OWN PRODUCTS", desc: "Developing proprietary platforms that solve real-world problems." },
+                    { title: "CLIENT SOLUTIONS", desc: "Custom engineering tailored to specific business requirements." },
+                    { title: "END-TO-END DELIVERY", desc: "Taking concepts from initial design through to production deployment." }
+                  ].map((item, i) => (
+                    <motion.div key={i} variants={revealUp} className="flex gap-4 items-start">
+                      <div className="text-black mt-1"><CheckCircle2 size={24} strokeWidth={3} /></div>
+                      <div>
+                        <h3 className="text-xl font-black uppercase tracking-tight mb-1">{item.title}</h3>
+                        <p className="text-gray-600 font-medium">{item.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 4. WHAT WE DO (Products - Dark Band) */}
+          <motion.section id="what-we-do" className="bg-white py-24 md:py-32 relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <div id="products">
+                <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none text-black mb-16">
+                  FEATURED PRODUCTS
+                </motion.h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  
+                  {/* Product 1: SportIQ */}
+                  <motion.div 
+                    variants={revealUp} 
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="group relative bg-gray-50 rounded-sm overflow-hidden flex flex-col cursor-pointer border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow h-full"
+                  >
+                    <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1] z-0"></div>
+                    
+                    <div className="flex flex-col flex-grow relative z-10 p-8 md:p-10">
+                      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start gap-4 mb-4">
+                        <h3 className="text-3xl font-black text-black uppercase tracking-tight">
+                          SPORTIQ
+                        </h3>
+                      </div>
+                      <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
+                        AI-enabled sports ecosystem connecting athletes, coaches, tournament organizers, and government sports bodies.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Product 2: SmartBus TN */}
+                  <motion.div 
+                    variants={revealUp} 
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                    className="group relative bg-gray-50 rounded-sm overflow-hidden flex flex-col cursor-pointer border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow h-full"
+                  >
+                    <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1] z-0"></div>
+                    
+                    <div className="flex flex-col flex-grow relative z-10 p-8 md:p-10">
+                      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start gap-4 mb-4">
+                        <h3 className="text-3xl font-black text-black uppercase tracking-tight">
+                          SMARTBUS TN
+                        </h3>
+                      </div>
+                      <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
+                        AI-powered public transport tracking with real-time passenger counting and occupancy insights.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Product 3: SmartMaint AI */}
+                  <motion.div 
+                    variants={revealUp} 
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                    className="group relative bg-gray-50 rounded-sm overflow-hidden flex flex-col cursor-pointer border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow h-full"
+                  >
+                    <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1] z-0"></div>
+                    
+                    <div className="flex flex-col flex-grow relative z-10 p-8 md:p-10">
+                      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start gap-4 mb-4">
+                        <h3 className="text-3xl font-black text-black uppercase tracking-tight">
+                          SMARTMAINT AI
+                        </h3>
+                      </div>
+                      <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
+                        Failure prediction and equipment monitoring for industrial systems using AI-driven analytics.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Product 4: FireGuard Robots */}
+                  <motion.div 
+                    variants={revealUp} 
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                    className="group relative bg-gray-50 rounded-sm overflow-hidden flex flex-col cursor-pointer border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow h-full"
+                  >
+                    <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1] z-0"></div>
+                    
+                    <div className="flex flex-col flex-grow relative z-10 p-8 md:p-10">
+                      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start gap-4 mb-4">
+                        <h3 className="text-3xl font-black text-black uppercase tracking-tight">
+                          FIREGUARD ROBOTS
+                        </h3>
+                      </div>
+                      <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
+                        Robotic systems designed to support fire safety and hazard response in industrial environments.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 5. SERVICES (Light Band) */}
+          <motion.section id="services" className="py-24 md:py-32 bg-white text-black relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-16">
+                CORE SERVICES
+              </motion.h2>
+              
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
+                
+                {/* Left side: Selector List */}
+                <div className="lg:w-1/3 flex flex-col gap-2">
+                  {[
+                    { icon: Globe, title: "WEB DEV", desc: "Business websites, robust web applications, and scalable admin panels." },
+                    { icon: Smartphone, title: "MOBILE APPS", desc: "Native Android & high-performance React Native cross-platform solutions." },
+                    { icon: Database, title: "BACKEND SYSTEMS", desc: "Secure APIs, database architecture, and tailored backend systems." },
+                    { icon: BrainCircuit, title: "AI & ML", desc: "RAG-based systems, predictive features, and AI integrations." },
+                    { icon: ScanEye, title: "COMPUTER VISION", desc: "YOLO detection, analytics, and automated monitoring solutions." },
+                    { icon: Cpu, title: "IoT EMBEDDED", desc: "Sensor/hardware integration tied to intelligent AI pipelines." }
+                  ].map((service, idx) => {
+                    const isActive = activeServiceIdx === idx;
+                    return (
+                      <div 
+                        key={idx}
+                        onClick={() => setActiveServiceIdx(idx)}
+                        onMouseEnter={() => setActiveServiceIdx(idx)}
+                        className={`group cursor-pointer p-6 border-l-4 transition-all duration-300 flex items-center gap-4 ${isActive ? 'border-black bg-white text-black' : 'border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 text-black'}`}
+                      >
+                        <service.icon size={24} className={isActive ? 'text-black' : 'text-gray-500 group-hover:text-black transition-colors'} />
+                        <div>
+                          <h3 className="text-xl font-black uppercase tracking-tight">{service.title}</h3>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Right side: Animated Display */}
+                <div className="lg:w-2/3 bg-gray-50 rounded-sm border border-gray-200 flex flex-col items-center justify-center p-8 lg:p-16 relative overflow-hidden min-h-[500px]">
+                  <AnimatePresence mode="wait">
+                  {activeServiceIdx === 0 && (
+                    <motion.div key="s0" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* Browser Window Animation */}
+                      <div className="w-full bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden mb-12">
+                        <div className="bg-gray-100 border-b border-gray-200 px-4 py-3 flex gap-2">
+                          <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <div className="p-6 flex flex-col gap-4 bg-white h-48">
+                          <motion.div initial={{ width: 0 }} animate={{ width: "60%" }} transition={{ duration: 1, ease: "easeOut" }} className="h-4 bg-gray-200 rounded"></motion.div>
+                          <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }} className="h-24 bg-gray-100 rounded"></motion.div>
+                          <div className="flex gap-4 w-full">
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="h-4 bg-gray-100 rounded w-1/3"></motion.div>
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.7 }} className="h-4 bg-gray-100 rounded w-1/3"></motion.div>
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }} className="h-4 bg-gray-100 rounded w-1/3"></motion.div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">WEB DEV</h4>
+                        <p className="text-gray-600 font-medium mt-2">Business websites, robust web applications, and scalable admin panels.</p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeServiceIdx === 1 && (
+                    <motion.div key="s1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* Mobile App Animation */}
+                      <div className="w-48 h-80 border-8 border-gray-100 rounded-[2rem] p-1 relative shadow-2xl bg-gray-50 overflow-hidden flex flex-col items-center mb-12">
+                        <div className="w-16 h-4 bg-gray-50 rounded-b-xl absolute top-0 z-10"></div>
+                        <div className="w-full h-full bg-white rounded-2xl relative overflow-hidden">
+                           <motion.div 
+                             initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
+                             className="w-full h-full bg-gray-50 flex flex-col gap-3 p-3 pt-6"
+                           >
+                             <div className="w-full h-24 bg-gray-200 rounded-xl"></div>
+                             <div className="w-full h-12 bg-gray-200 rounded-xl"></div>
+                             <div className="w-full h-12 bg-gray-200 rounded-xl"></div>
+                             <div className="flex gap-2">
+                                <div className="w-1/2 h-16 bg-gray-200 rounded-xl"></div>
+                                <div className="w-1/2 h-16 bg-gray-200 rounded-xl"></div>
+                             </div>
+                           </motion.div>
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">MOBILE APPS</h4>
+                        <p className="text-gray-600 font-medium mt-2">Native Android & high-performance React Native cross-platform solutions.</p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeServiceIdx === 2 && (
+                    <motion.div key="s2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* Backend Animation */}
+                      <div className="flex flex-col gap-6 relative mb-12 h-64 justify-center mt-6">
+                        {[1, 2, 3].map((item, i) => (
+                          <motion.div 
+                            key={i}
+                            initial={{ x: -30, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: i * 0.2, type: "spring" }}
+                            className="w-56 h-16 bg-white border border-gray-200 rounded-lg shadow-lg flex items-center px-4 relative z-10"
+                          >
+                            <Database className="text-gray-600 mr-4" size={24} />
+                            <div className="w-24 h-2 bg-gray-200 rounded"></div>
+                            {/* Blinking lights */}
+                            <motion.div 
+                               animate={{ opacity: [0.2, 1, 0.2] }} 
+                               transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.3 }} 
+                               className="w-2 h-2 rounded-full bg-green-500 absolute right-4" 
+                            />
+                          </motion.div>
+                        ))}
+                        {/* Connecting lines */}
+                        <motion.div 
+                          initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 0.8, duration: 0.5 }}
+                          className="absolute left-1/2 top-4 bottom-4 w-1 bg-gray-300 origin-top z-0"
+                        />
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">BACKEND SYSTEMS</h4>
+                        <p className="text-gray-600 font-medium mt-2">Secure APIs, database architecture, and tailored backend systems.</p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeServiceIdx === 3 && (
+                    <motion.div key="s3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* AI & ML Animation */}
+                      <div className="relative w-64 h-64 flex items-center justify-center mb-12">
+                        <BrainCircuit size={80} strokeWidth={1.5} className="text-black relative z-10" />
+                        <motion.div 
+                           animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0, 0.2] }} 
+                           transition={{ repeat: Infinity, duration: 2 }}
+                           className="absolute inset-0 m-auto w-32 h-32 rounded-full border border-black"
+                        />
+                        <motion.div 
+                           animate={{ scale: [1, 1.8, 1], opacity: [0.1, 0, 0.1] }} 
+                           transition={{ repeat: Infinity, duration: 2.5, delay: 0.2 }}
+                           className="absolute inset-0 m-auto w-48 h-48 rounded-full border border-black"
+                        />
+                        {/* Orbiting nodes */}
+                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }} className="absolute w-full h-full inset-0 m-auto z-20">
+                           <div className="w-3 h-3 bg-white rounded-full absolute top-4 left-1/2 -translate-x-1/2"></div>
+                           <div className="w-2 h-2 bg-gray-500 rounded-full absolute top-1/2 right-4 -translate-y-1/2"></div>
+                           <div className="w-2 h-2 bg-gray-100 rounded-full absolute bottom-8 left-1/4"></div>
+                        </motion.div>
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">AI & ML</h4>
+                        <p className="text-gray-600 font-medium mt-2">RAG-based systems, predictive features, and AI integrations.</p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeServiceIdx === 4 && (
+                    <motion.div key="s4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* Computer Vision Animation */}
+                      <div className="relative w-72 h-56 bg-gray-300 rounded-xl overflow-hidden flex items-center justify-center mb-12 shadow-inner border border-gray-200">
+                        <div className="absolute inset-0 bg-gray-200 opacity-50 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjZWVlIiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+')]"></div>
+                        <ScanEye size={48} className="text-gray-600 absolute opacity-20" />
+                        
+                        {/* Scanning Box */}
+                        <motion.div 
+                          animate={{ x: [-60, 60, -60], y: [-30, 30, -30], scale: [1, 1.1, 1] }}
+                          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                          className="w-32 h-32 border-2 border-black relative z-10 bg-white/5"
+                        >
+                          {/* Corner markers */}
+                          <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-black"></div>
+                          <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-black"></div>
+                          <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-black"></div>
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-black"></div>
+                          
+                          {/* Data overlay */}
+                          <div className="absolute -top-6 left-0 bg-white text-black text-[10px] font-mono px-2 py-0.5 tracking-wider">
+                            CONFIDENCE: 98.7%
+                          </div>
+                        </motion.div>
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">COMPUTER VISION</h4>
+                        <p className="text-gray-600 font-medium mt-2">YOLO detection, analytics, and automated monitoring solutions.</p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeServiceIdx === 5 && (
+                    <motion.div key="s5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* IoT Embedded Animation */}
+                      <div className="relative w-64 h-64 flex items-center justify-center mb-12">
+                        {/* Center Chip */}
+                        <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center relative z-20 shadow-2xl border border-gray-200">
+                          <Cpu className="text-black" size={40} strokeWidth={1.5} />
+                        </div>
+                        {/* Pulse waves */}
+                        <motion.div 
+                          animate={{ scale: [1, 2.5], opacity: [0.5, 0] }}
+                          transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }}
+                          className="absolute inset-0 m-auto w-20 h-20 border border-black rounded-full z-10"
+                        />
+                        {/* Connecting traces */}
+                        <svg className="absolute inset-0 w-full h-full z-0" viewBox="0 0 100 100">
+                          <motion.path 
+                            d="M50 50 L15 15 M50 50 L85 15 M50 50 L15 85 M50 50 L85 85 M50 50 L5 50 M50 50 L95 50" 
+                            stroke="#000" strokeWidth="1" strokeDasharray="4 4" fill="none"
+                            animate={{ strokeDashoffset: [0, -20] }}
+                            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                          />
+                        </svg>
+                        {/* Edge Nodes */}
+                        <div className="absolute top-2 left-2 w-5 h-5 bg-white shadow-md rounded-full border-2 border-black flex items-center justify-center"><div className="w-1 h-1 bg-white rounded-full"></div></div>
+                        <div className="absolute top-2 right-2 w-5 h-5 bg-white shadow-md rounded-full border-2 border-black flex items-center justify-center"><div className="w-1 h-1 bg-white rounded-full"></div></div>
+                        <div className="absolute bottom-2 left-2 w-5 h-5 bg-white shadow-md rounded-full border-2 border-black flex items-center justify-center"><div className="w-1 h-1 bg-white rounded-full"></div></div>
+                        <div className="absolute bottom-2 right-2 w-5 h-5 bg-white shadow-md rounded-full border-2 border-black flex items-center justify-center"><div className="w-1 h-1 bg-white rounded-full"></div></div>
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 bg-white shadow-md rounded-full border-2 border-black flex items-center justify-center"><div className="w-1 h-1 bg-white rounded-full"></div></div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-5 h-5 bg-white shadow-md rounded-full border-2 border-black flex items-center justify-center"><div className="w-1 h-1 bg-white rounded-full"></div></div>
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">IoT EMBEDDED</h4>
+                        <p className="text-gray-600 font-medium mt-2">Sensor/hardware integration tied to intelligent AI pipelines.</p>
+                      </div>
+                    </motion.div>
+                  )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 6. OUR APPROACH (Dark Band with Carousel) */}
+          <section className="py-24 md:py-32 bg-gray-50 text-black relative z-20 overflow-hidden">
+            <motion.div className="max-w-7xl mx-auto px-6 md:px-12 mb-16" {...sectionProps}>
+              <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
+                THE PROCESS
+              </motion.h2>
+            </motion.div>
+            
+            <div className="w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <div className="flex gap-6 px-6 md:px-12 w-max">
+                {[
+                  { step: "01", title: "DISCOVER", desc: "Problem mapping & deep domain understanding." },
+                  { step: "02", title: "DEFINE", desc: "Strict requirements & product scoping." },
+                  { step: "03", title: "DESIGN", desc: "Architecture, data models & UX/UI." },
+                  { step: "04", title: "BUILD", desc: "Full-stack robust engineering execution." },
+                  { step: "05", title: "TEST", desc: "QA, penetration & load testing." },
+                  { step: "06", title: "DEPLOY", desc: "Secure production rollout." },
+                  { step: "07", title: "SUPPORT", desc: "Ongoing SLA & iterative feature scaling." },
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx} 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    whileHover="hover"
+                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-hidden relative group cursor-pointer h-[300px] flex flex-col justify-end transition-shadow hover:shadow-[0_10px_40px_rgba(255,255,255,0.05)]"
+                  >
+                    {/* Glowing Top Line */}
+                    <motion.div 
+                      variants={{ hover: { scaleX: 1, opacity: 1 } }}
+                      initial={{ scaleX: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="absolute top-0 left-0 right-0 h-1.5 bg-white origin-left z-20"
+                    />
+                    
+                    {/* Watermark Number */}
+                    <motion.div
+                      variants={{ hover: { scale: 1.1, opacity: 0.05, x: -10, y: 10 } }}
+                      initial={{ scale: 1, opacity: 0, x: 0, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute -top-6 -right-6 text-[180px] leading-none font-black text-black select-none z-0 pointer-events-none"
+                    >
+                      {item.step}
+                    </motion.div>
+
+                    {/* Content */}
+                    <div className="relative z-10 w-full">
+                      <motion.div 
+                        variants={{ hover: { y: -10 } }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                      >
+                        <span className="text-xl font-bold text-gray-500 block mb-6 transition-colors duration-500 group-hover:text-black">
+                          {item.step}
+                        </span>
+                        <h4 className="text-2xl font-black text-black mb-3 uppercase tracking-tight">
+                          {item.title}
+                        </h4>
+                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-gray-200">
+                          {item.desc}
+                        </p>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 7. WHY WE EXIST */}
+          <motion.section id="why-we-exist" className="py-24 md:py-32 bg-white text-black relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <motion.div variants={revealUp} className="mb-16">
+                <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-600 mb-4">WHY WE EXIST</h2>
+              </motion.div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 mb-24">
+                {/* Vision Column */}
+                <motion.div 
+                  variants={revealUp} 
+                  className="flex flex-col bg-gray-50 rounded-lg border border-gray-200 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group"
+                >
+                  {/* Graphic Area */}
+                  <div className="h-48 bg-white flex items-center justify-center relative border-b border-gray-200 overflow-hidden bg-dot-pattern-dark">
+                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} className="w-64 h-64 border border-gray-200 rounded-full absolute" />
+                    
+                    {/* The Eye Animation Container */}
+                    <div className="relative w-24 h-24 flex items-center justify-center z-10 text-blue-600">
+                      {/* Open Eye SVG */}
+                      <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md transform group-hover:scale-110 transition-transform duration-700 ease-out">
+                        {/* Eye shape */}
+                        <path d="M 10 50 Q 50 10 90 50 Q 50 90 10 50 Z" fill="white" stroke="currentColor" strokeWidth="4" />
+                        {/* Iris */}
+                        <circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" strokeWidth="3" className="opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100" />
+                        {/* Pupil */}
+                        <circle cx="50" cy="50" r="6" fill="currentColor" className="scale-50 group-hover:scale-150 transition-transform duration-500 origin-center" />
+                      </svg>
+
+                      {/* Top Eyelid (Closes down) */}
+                      <div className="absolute top-0 left-0 w-full h-1/2 bg-white z-20 origin-top transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-b-4 border-blue-200"></div>
+                      {/* Bottom Eyelid (Closes up) */}
+                      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white z-20 origin-bottom transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-t-4 border-blue-200"></div>
+                    </div>
+                  </div>
+                  {/* Content Area */}
+                  <div className="p-8 md:p-10 flex-grow">
+                    <h3 className="text-3xl font-black uppercase tracking-tight mb-4 group-hover:text-blue-600 transition-colors duration-500">Our Vision</h3>
+                    <p className="text-gray-600 text-lg font-medium leading-relaxed">
+                      To build a technology-driven future where innovative ideas and intelligent solutions create meaningful impact in the real world.
+                    </p>
+                  </div>
+                </motion.div>
+                
+                {/* Mission Column */}
+                <motion.div 
+                  variants={revealUp} 
+                  className="flex flex-col bg-gray-50 rounded-lg border border-gray-200 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group"
+                >
+                  {/* Graphic Area */}
+                  <div className="h-48 bg-white flex items-center justify-center relative border-b border-gray-200 overflow-hidden bg-dot-pattern-dark">
+                    <motion.div animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="w-48 h-48 border border-blue-100 border-dashed rounded-full absolute opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    {/* The Target/Mission Container */}
+                    <div className="relative w-32 h-32 flex items-center justify-center z-10">
+                      {/* Outer scanning ring */}
+                      <div className="absolute inset-0 border-4 border-blue-100 rounded-full scale-50 group-hover:scale-100 transition-transform duration-700 ease-out">
+                         <div className="absolute top-0 left-1/2 w-1 h-4 bg-blue-600 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
+                         <div className="absolute bottom-0 left-1/2 w-1 h-4 bg-blue-600 -translate-x-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
+                         <div className="absolute left-0 top-1/2 h-1 w-4 bg-blue-600 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
+                         <div className="absolute right-0 top-1/2 h-1 w-4 bg-blue-600 -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
+                      </div>
+
+                      {/* Center Target processing */}
+                      <div className="w-12 h-12 bg-blue-50 rounded-lg border-2 border-blue-300 flex items-center justify-center relative z-20 group-hover:bg-blue-600 group-hover:border-blue-600 transition-colors duration-500 delay-100">
+                        <Target size={24} className="text-blue-600 group-hover:text-white transition-colors duration-500 delay-100" />
+                        
+                        {/* Expanding Ping */}
+                        <div className="absolute inset-0 border-2 border-blue-400 rounded-lg opacity-0 group-hover:animate-ping transition-all"></div>
+                      </div>
+
+                      {/* Radar sweep */}
+                      <motion.div 
+                        animate={{ rotate: 360 }} 
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                        style={{ background: 'conic-gradient(from 0deg, transparent 70%, rgba(37,99,235,0.2) 100%)' }}
+                      />
+                    </div>
+                  </div>
+                  {/* Content Area */}
+                  <div className="p-8 md:p-10 flex-grow">
+                    <h3 className="text-3xl font-black uppercase tracking-tight mb-4 group-hover:text-blue-600 transition-colors duration-500">Our Mission</h3>
+                    <p className="text-gray-600 text-lg font-medium leading-relaxed">
+                      To transform real-world challenges and ideas into reliable, scalable technology through AI, software, automation, and intelligent systems — while building products of our own and delivering solutions that create value for our clients.
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+            
+            {/* Philosophy Block */}
+            <div className="w-full bg-black text-white py-20 md:py-28 px-6 md:px-12 text-center gsap-reveal">
+              <div className="max-w-5xl mx-auto">
+                <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-12">
+                  WE BUILD OUR OWN.<br/>
+                  WE BUILD FOR OTHERS.
+                </h3>
+                <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-gray-400 font-bold tracking-widest uppercase text-sm md:text-base">
+                  <span>From ideas to products.</span>
+                  <span className="hidden md:inline-block w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
+                  <span>From requirements to solutions.</span>
+                  <span className="hidden md:inline-block w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
+                  <span>From problems to technology.</span>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 8. LEADERSHIP */}
+          <motion.section id="leadership" className="py-24 md:py-32 bg-white text-black relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <div className="flex justify-between items-end mb-16">
+                <motion.div variants={revealUp}>
+                  <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-600 mb-4">Leadership</h2>
+                  <p className="text-4xl md:text-5xl font-bold tracking-tight">The team driving the vision.</p>
+                </motion.div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+                {[
+                  { name: "Nithishkumar S", title: "Founder & CEO", role: "Driving company strategy and business growth.", image: "public/images/nithishkumar.png" },
+                  { name: "Sanjay R", title: "Founder & CTO", role: "Leading technical architecture and product engineering.", image: "public/images/sanjay.png" },
+                  { name: "Hemasundar B", title: "Founder & CPO", role: "Directing product vision and user experience.", image: "public/images/hemasundar.png" },
+                  { name: "Naveen N", title: "Founder & COO", role: "Overseeing operations and service delivery.", image: "public/images/naveen.png" },
+                ].map((leader, idx) => (
+                  <motion.div key={idx} variants={revealUp} whileHover={shouldReduceMotion ? {} : "hover"} className="group cursor-default">
+                    <div className="w-full aspect-square bg-gray-50 rounded-3xl mb-8 overflow-hidden border border-gray-200 transition-all duration-500 group-hover:border-gray-500 group-hover:shadow-2xl">
+                      <motion.div 
+                        variants={{ hover: { scale: 1.08 } }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full h-full bg-gray-50"
+                      >
+                        <img src={leader.image} alt={leader.name} className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700" />
+                      </motion.div>
+                    </div>
+                    <h3 className="text-2xl font-bold mb-1 tracking-tight">{leader.name}</h3>
+                    <p className="text-sm font-medium text-gray-600 mb-4">{leader.title}</p>
+                    <div className="w-12 h-px bg-gray-100 mb-4 group-hover:bg-gray-400 transition-colors duration-500 group-hover:w-full"></div>
+                  <p className="text-sm text-gray-500 leading-relaxed font-light">{leader.role}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 7. CONTACT */}
+          <motion.section id="contact" className="py-24 md:py-40 bg-white relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+                <motion.div variants={revealUp}>
+                  <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none text-black mb-8">
+                    CONTACT US.
+                  </h2>
+                  <p className="text-2xl md:text-4xl font-bold text-gray-600 mb-12 tracking-tight leading-tight max-w-lg">
+                    Let's build something extraordinary together.
+                  </p>
+                  
+                  <div className="space-y-10 mt-12 border-l-4 border-gray-200 pl-8">
+                    <div className="group">
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Email</p>
+                      <a href="mailto:orvantentechnology@gmail.com" className="text-xl md:text-2xl font-medium text-black hover:text-gray-600 transition-colors">
+                        orvantentechnology@gmail.com
+                      </a>
+                    </div>
+                    <div className="group">
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Phone</p>
+                      <p className="text-xl md:text-2xl font-medium text-black">8778899041 <span className="text-gray-600 mx-2">|</span> 8438439908</p>
+                    </div>
+                    <div className="group">
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Social</p>
+                      <a href="https://instagram.com/orvantentech" className="text-xl md:text-2xl font-medium text-black hover:text-gray-600 transition-colors">
+                        @orvantentech
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+                
+                <motion.div variants={revealUp} className="bg-gray-50 p-8 md:p-12 shadow-2xl rounded-none border border-gray-200">
+                  {submitStatus === 'success' ? (
+                    <div className="flex flex-col items-center justify-center text-center h-full py-16">
+                      <div className="w-20 h-20 bg-white border-2 border-gray-700 text-black flex items-center justify-center mb-8">
+                        <CheckCircle2 size={40} />
+                      </div>
+                      <h3 className="text-3xl font-black text-black mb-4 uppercase tracking-tight">MESSAGE SENT</h3>
+                      <p className="text-gray-600 text-lg">Thanks — your message has been received. We'll be in touch shortly.</p>
+                      <button 
+                        onClick={() => setSubmitStatus(null)}
+                        className="mt-10 text-sm font-bold text-black uppercase tracking-widest border-b-2 border-black pb-1 hover:text-gray-600 hover:border-gray-400 transition-colors"
+                      >
+                        SEND ANOTHER
+                      </button>
+                    </div>
+                  ) : (
+                    <form className="space-y-8" onSubmit={handleContactSubmit}>
+                      <div>
+                        <label htmlFor="name" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Name</label>
+                        <input 
+                          type="text" 
+                          id="name" 
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          className={`w-full bg-white border-b-2 border-gray-700 px-4 py-4 text-black focus:outline-none focus:ring-0 transition-all ${formErrors.name ? 'border-red-500' : 'focus:border-black'}`}
+                          placeholder="ENTER YOUR NAME" 
+                        />
+                        {formErrors.name && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.name}</p>}
+                      </div>
+                      <div>
+                        <label htmlFor="email" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Email</label>
+                        <input 
+                          type="text" 
+                          id="email" 
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          className={`w-full bg-white border-b-2 border-gray-700 px-4 py-4 text-black focus:outline-none focus:ring-0 transition-all ${formErrors.email ? 'border-red-500' : 'focus:border-black'}`}
+                          placeholder="ENTER YOUR EMAIL" 
+                        />
+                        {formErrors.email && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.email}</p>}
+                      </div>
+                      <div>
+                        <label htmlFor="message" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Message</label>
+                        <textarea 
+                          id="message" 
+                          rows={4} 
+                          value={formData.message}
+                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          className={`w-full bg-white border-b-2 border-gray-700 px-4 py-4 text-black focus:outline-none focus:ring-0 transition-all resize-none ${formErrors.message ? 'border-red-500' : 'focus:border-black'}`}
+                          placeholder="TELL US ABOUT YOUR PROJECT"
+                        ></textarea>
+                        {formErrors.message && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.message}</p>}
+                      </div>
+                      
+                      {submitStatus === 'error' && (
+                        <div className="bg-red-900/20 text-red-400 border border-red-900 p-4 text-sm font-medium">
+                          Something went wrong. Please check your Access Key or email us directly at orvantentechnology@gmail.com
+                        </div>
+                      )}
+
+                      <motion.button 
+                        whileHover={isSubmitting ? {} : { scale: 1.02 }}
+                        whileTap={isSubmitting ? {} : { scale: 0.98 }}
+                        disabled={isSubmitting}
+                        type="submit" 
+                        className={`w-full text-black px-6 py-5 font-bold uppercase tracking-widest transition-colors mt-8 flex items-center justify-center gap-3 ${isSubmitting ? 'bg-gray-600 cursor-not-allowed' : 'bg-white hover:bg-gray-200'}`}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            SENDING...
+                          </>
+                        ) : 'SEND INQUIRY'}
+                      </motion.button>
+                    </form>
+                  )}
+                </motion.div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 8. FOOTER */}
+          <footer className="bg-white text-black py-16 border-t border-gray-100">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8">
+              <div className="text-center md:text-left flex flex-col items-center md:items-start gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 bg-accent rounded-sm"></div>
+                  <h2 className="text-2xl font-black tracking-tight uppercase">ORVANTEN</h2>
+                </div>
+                <p className="text-gray-600 font-bold tracking-widest uppercase text-xs">FROM IDEA → DEVELOPMENT → DEPLOYMENT</p>
+              </div>
+              <div className="flex flex-col items-center md:items-end gap-6">
+                <a href="https://instagram.com/orvantentech" className="text-gray-600 hover:text-black transition-colors">
+                  <AtSign size={24} />
+                </a>
+                <p className="text-gray-600 font-medium text-sm">
+                  © {new Date().getFullYear()} Orvanten Technology. All rights reserved.
+                </p>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    
+  
+export default App;
