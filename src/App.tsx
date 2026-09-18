@@ -11,6 +11,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const TrackingEye = () => {
+  return (
+    <div className="relative w-24 h-24 flex items-center justify-center z-10 text-blue-600 group">
+      <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md transform group-hover:scale-110 transition-transform duration-700 ease-out">
+        <path d="M 10 50 Q 50 10 90 50 Q 50 90 10 50 Z" fill="white" stroke="currentColor" strokeWidth="4" />
+        <g className="origin-center">
+          <circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" strokeWidth="3" className="opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100" />
+          <circle cx="50" cy="50" r="6" fill="currentColor" className="scale-50 group-hover:scale-150 transition-transform duration-500 origin-center" />
+        </g>
+      </svg>
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-white z-20 origin-top transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-b-4 border-blue-200"></div>
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white z-20 origin-bottom transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-t-4 border-blue-200"></div>
+    </div>
+  );
+};
+
 const App = () => {
       const [isScrolled, setIsScrolled] = useState(false);
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -762,85 +778,121 @@ const App = () => {
                 <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-600 mb-4">WHY WE EXIST</h2>
               </motion.div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 mb-24">
-                {/* Vision Column */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-24">
+                {/* Vision Card */}
                 <motion.div 
                   variants={revealUp} 
-                  className="flex flex-col bg-gray-50 rounded-lg border border-gray-200 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group"
+                  className="group relative bg-white rounded-3xl p-1 overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(37,99,235,0.15)] transition-all duration-700 hover:-translate-y-2 border border-gray-100"
                 >
-                  {/* Graphic Area */}
-                  <div className="h-48 bg-white flex items-center justify-center relative border-b border-gray-200 overflow-hidden bg-dot-pattern-dark">
-                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} className="w-64 h-64 border border-gray-200 rounded-full absolute" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div className="relative bg-white rounded-[22px] h-full flex flex-col z-10 border border-gray-50 overflow-hidden">
                     
-                    {/* The Eye Animation Container */}
-                    <div className="relative w-24 h-24 flex items-center justify-center z-10 text-blue-600">
-                      {/* Open Eye SVG */}
-                      <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md transform group-hover:scale-110 transition-transform duration-700 ease-out">
-                        {/* Eye shape */}
-                        <path d="M 10 50 Q 50 10 90 50 Q 50 90 10 50 Z" fill="white" stroke="currentColor" strokeWidth="4" />
-                        {/* Iris */}
-                        <circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" strokeWidth="3" className="opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100" />
-                        {/* Pupil */}
-                        <circle cx="50" cy="50" r="6" fill="currentColor" className="scale-50 group-hover:scale-150 transition-transform duration-500 origin-center" />
-                      </svg>
-
-                      {/* Top Eyelid (Closes down) */}
-                      <div className="absolute top-0 left-0 w-full h-1/2 bg-white z-20 origin-top transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-b-4 border-blue-200"></div>
-                      {/* Bottom Eyelid (Closes up) */}
-                      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white z-20 origin-bottom transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-t-4 border-blue-200"></div>
+                    {/* Abstract Header Graphic */}
+                    <div className="h-56 bg-gray-50/50 relative overflow-hidden flex items-center justify-center border-b border-gray-100/50">
+                      {/* Animated Background Elements */}
+                      <motion.div 
+                         animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }} 
+                         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                         className="absolute -top-24 -right-24 w-64 h-64 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-700" 
+                      />
+                      <motion.div 
+                         animate={{ scale: [1, 1.5, 1], rotate: [0, -90, 0] }} 
+                         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                         className="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-700" 
+                      />
+                      
+                      {/* Central Icon Complex */}
+                      <div className="relative w-48 h-48 flex items-center justify-center z-10">
+                        {/* Outer slow orbit */}
+                        <motion.div 
+                          animate={{ rotate: 360 }} 
+                          transition={{ duration: 30, repeat: Infinity, ease: "linear" }} 
+                          className="absolute inset-0 border-[1.5px] border-blue-300/50 rounded-full border-t-transparent border-l-transparent"
+                        />
+                        {/* Inner fast dashed orbit */}
+                        <motion.div 
+                          animate={{ rotate: -360 }} 
+                          transition={{ duration: 20, repeat: Infinity, ease: "linear" }} 
+                          className="absolute inset-4 border-[1px] border-purple-300/60 border-dashed rounded-full"
+                        />
+                        {/* Core pulsing energy ring */}
+                        <motion.div 
+                          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }} 
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} 
+                          className="absolute inset-8 border-[1px] border-blue-400/40 rounded-full"
+                        />
+                        <TrackingEye />
+                      </div>
                     </div>
-                  </div>
-                  {/* Content Area */}
-                  <div className="p-8 md:p-10 flex-grow">
-                    <h3 className="text-3xl font-black uppercase tracking-tight mb-4 group-hover:text-blue-600 transition-colors duration-500">Our Vision</h3>
-                    <p className="text-gray-600 text-lg font-medium leading-relaxed">
-                      To build a technology-driven future where innovative ideas and intelligent solutions create meaningful impact in the real world.
-                    </p>
+
+                    {/* Content Area */}
+                    <div className="p-8 md:p-12 flex-grow flex flex-col justify-center">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="h-px bg-blue-600 flex-grow max-w-[40px] group-hover:max-w-[80px] transition-all duration-700"></div>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors duration-500">Our Vision</h3>
+                      </div>
+                      <p className="text-gray-600 text-lg font-medium leading-relaxed group-hover:text-gray-800 transition-colors duration-500">
+                        To build a technology-driven future where innovative ideas and intelligent solutions create meaningful impact in the real world.
+                      </p>
+                    </div>
+
                   </div>
                 </motion.div>
                 
-                {/* Mission Column */}
+                {/* Mission Card */}
                 <motion.div 
                   variants={revealUp} 
-                  className="flex flex-col bg-gray-50 rounded-lg border border-gray-200 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group"
+                  className="group relative bg-white rounded-3xl p-1 overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(37,99,235,0.15)] transition-all duration-700 hover:-translate-y-2 border border-gray-100"
                 >
-                  {/* Graphic Area */}
-                  <div className="h-48 bg-white flex items-center justify-center relative border-b border-gray-200 overflow-hidden bg-dot-pattern-dark">
-                    <motion.div animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="w-48 h-48 border border-blue-100 border-dashed rounded-full absolute opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-bl from-purple-50 to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div className="relative bg-white rounded-[22px] h-full flex flex-col z-10 border border-gray-50 overflow-hidden">
                     
-                    {/* The Target/Mission Container */}
-                    <div className="relative w-32 h-32 flex items-center justify-center z-10">
-                      {/* Outer scanning ring */}
-                      <div className="absolute inset-0 border-4 border-blue-100 rounded-full scale-50 group-hover:scale-100 transition-transform duration-700 ease-out">
-                         <div className="absolute top-0 left-1/2 w-1 h-4 bg-blue-600 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
-                         <div className="absolute bottom-0 left-1/2 w-1 h-4 bg-blue-600 -translate-x-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
-                         <div className="absolute left-0 top-1/2 h-1 w-4 bg-blue-600 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
-                         <div className="absolute right-0 top-1/2 h-1 w-4 bg-blue-600 -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
-                      </div>
-
-                      {/* Center Target processing */}
-                      <div className="w-12 h-12 bg-blue-50 rounded-lg border-2 border-blue-300 flex items-center justify-center relative z-20 group-hover:bg-blue-600 group-hover:border-blue-600 transition-colors duration-500 delay-100">
-                        <Target size={24} className="text-blue-600 group-hover:text-white transition-colors duration-500 delay-100" />
-                        
-                        {/* Expanding Ping */}
-                        <div className="absolute inset-0 border-2 border-blue-400 rounded-lg opacity-0 group-hover:animate-ping transition-all"></div>
-                      </div>
-
-                      {/* Radar sweep */}
+                    {/* Abstract Header Graphic */}
+                    <div className="h-56 bg-gray-50/50 relative overflow-hidden flex items-center justify-center border-b border-gray-100/50">
+                      {/* Animated Background Elements */}
                       <motion.div 
-                        animate={{ rotate: 360 }} 
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-                        style={{ background: 'conic-gradient(from 0deg, transparent 70%, rgba(37,99,235,0.2) 100%)' }}
+                         animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }} 
+                         transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                         className="absolute -top-20 -left-20 w-56 h-56 bg-indigo-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-700" 
                       />
+                      <motion.div 
+                         animate={{ scale: [1, 1.4, 1], rotate: [0, 90, 0] }} 
+                         transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+                         className="absolute -bottom-20 -right-20 w-56 h-56 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-700" 
+                      />
+                      
+                      {/* Central Icon Complex */}
+                      <div className="relative z-10 flex items-center justify-center gap-6">
+                        
+                        {/* Process Lines */}
+                        <div className="flex flex-col gap-3 relative z-10 -ml-12 group-hover:ml-0 transition-all duration-700 opacity-0 group-hover:opacity-100">
+                           <motion.div animate={{ x: [0, 15, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }} className="w-10 h-1.5 bg-blue-200 rounded-full" />
+                           <motion.div animate={{ x: [0, 25, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-16 h-1.5 bg-purple-200 rounded-full" />
+                           <motion.div animate={{ x: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-6 h-1.5 bg-blue-200 rounded-full" />
+                        </div>
+                        
+                        <div className="w-20 h-20 bg-white rounded-2xl shadow-xl flex items-center justify-center relative -rotate-3 group-hover:rotate-0 transition-transform duration-500 border border-gray-100 z-20">
+                          <BrainCircuit size={40} className="text-purple-600" />
+                          <motion.div 
+                            animate={{ scale: [1, 1.4], opacity: [0.8, 0] }} 
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }} 
+                            className="absolute inset-0 border-2 border-purple-400 rounded-2xl" 
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  {/* Content Area */}
-                  <div className="p-8 md:p-10 flex-grow">
-                    <h3 className="text-3xl font-black uppercase tracking-tight mb-4 group-hover:text-blue-600 transition-colors duration-500">Our Mission</h3>
-                    <p className="text-gray-600 text-lg font-medium leading-relaxed">
-                      To transform real-world challenges and ideas into reliable, scalable technology through AI, software, automation, and intelligent systems — while building products of our own and delivering solutions that create value for our clients.
-                    </p>
+
+                    {/* Content Area */}
+                    <div className="p-8 md:p-12 flex-grow flex flex-col justify-center">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="h-px bg-purple-600 flex-grow max-w-[40px] group-hover:max-w-[80px] transition-all duration-700"></div>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-gray-900 group-hover:text-purple-600 transition-colors duration-500">Our Mission</h3>
+                      </div>
+                      <p className="text-gray-600 text-lg font-medium leading-relaxed group-hover:text-gray-800 transition-colors duration-500">
+                        To transform real-world challenges and ideas into reliable, scalable technology through AI, software, automation, and intelligent systems — while building products of our own and delivering solutions that create value for our clients.
+                      </p>
+                    </div>
+
                   </div>
                 </motion.div>
               </div>
