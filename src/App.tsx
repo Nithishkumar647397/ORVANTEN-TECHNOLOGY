@@ -1,11 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, Menu, X, Globe, Smartphone, Database, 
-  BrainCircuit, ScanEye, Cpu, CheckCircle2, Target, AtSign, Linkedin, Instagram, Twitter
+  BrainCircuit, ScanEye, Cpu, CheckCircle2
 } from 'lucide-react';
 
-import Lenis from '@studio-freight/lenis';
+const Linkedin = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+);
+const Instagram = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+);
+const Twitter = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+);
+
+import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -38,9 +48,9 @@ const App = () => {
       const [formData, setFormData] = useState({ name: '', email: '', message: '' });
       const [formErrors, setFormErrors] = useState({ name: '', email: '', message: '' });
       const [isSubmitting, setIsSubmitting] = useState(false);
-      const [submitStatus, setSubmitStatus] = useState(null); // null | 'success' | 'error'
+      const [submitStatus, setSubmitStatus] = useState<string | null>(null); // null | 'success' | 'error'
     
-      const handleContactSubmit = async (e) => {
+      const handleContactSubmit = async (e: any) => {
         e.preventDefault();
         
         // Validation
@@ -69,7 +79,7 @@ const App = () => {
               Accept: "application/json",
             },
             body: JSON.stringify({
-              access_key: "fce84988-2dfb-4608-a557-388eae66a7fa", // <-- PASTE YOUR KEY HERE
+              access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
               name: formData.name,
               email: formData.email,
               message: formData.message,
@@ -101,7 +111,7 @@ const App = () => {
         // Initialize Lenis for smooth scrolling
         const lenis = new Lenis({
           duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          easing: (t: any) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
           orientation: 'vertical',
           gestureOrientation: 'vertical',
           smoothWheel: true,
@@ -150,7 +160,7 @@ const App = () => {
         { name: 'Leadership', href: '#leadership' },
       ];
 
-      const handleScrollTo = (e, targetId) => {
+      const handleScrollTo = (e: any, targetId: string) => {
         e.preventDefault();
         const element = document.getElementById(targetId.replace('#', ''));
         if (element) {
@@ -161,7 +171,7 @@ const App = () => {
 
       const revealUp = {
         hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
       };
 
       const sectionProps = {
@@ -356,16 +366,11 @@ const App = () => {
                   </p>
                 </motion.div>
                 <div className="grid gap-8">
-                  {[
-                    { title: "OWN PRODUCTS", desc: "Developing proprietary platforms that solve real-world problems." },
-                    { title: "CLIENT SOLUTIONS", desc: "Custom engineering tailored to specific business requirements." },
-                    { title: "END-TO-END DELIVERY", desc: "Taking concepts from initial design through to production deployment." }
-                  ].map((item, i) => (
+                  {['Initial Consultation', 'Design & Architecture', 'Agile Development', 'Testing & QA', 'Deployment'].map((item, i) => (
                     <motion.div key={i} variants={revealUp} className="flex gap-4 items-start">
                       <div className="text-black mt-1"><CheckCircle2 size={24} strokeWidth={3} /></div>
                       <div>
-                        <h3 className="text-xl font-black uppercase tracking-tight mb-1">{item.title}</h3>
-                        <p className="text-gray-600 font-medium">{item.desc}</p>
+                        <h3 className="text-xl font-black uppercase tracking-tight mb-1">{item}</h3>
                       </div>
                     </motion.div>
                   ))}
@@ -568,7 +573,7 @@ const App = () => {
                     <motion.div key="s2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
                       {/* Backend Animation */}
                       <div className="flex flex-col gap-6 relative mb-12 h-64 justify-center mt-6">
-                        {[1, 2, 3].map((item, i) => (
+                        {[1, 2, 3].map((_, i) => (
                           <motion.div 
                             key={i}
                             initial={{ x: -30, opacity: 0 }}
