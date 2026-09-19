@@ -724,22 +724,22 @@ const App = () => {
             <div className="w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 relative">
               <div className="flex gap-6 px-6 md:px-12 w-max">
                 {[
-                  { step: "01", title: "DISCOVER", desc: "Problem mapping & deep domain understanding.", color: "from-blue-500 to-indigo-600" },
-                  { step: "02", title: "DEFINE", desc: "Strict requirements & product scoping.", color: "from-indigo-500 to-purple-600" },
-                  { step: "03", title: "DESIGN", desc: "Architecture, data models & UX/UI.", color: "from-purple-500 to-pink-500" },
-                  { step: "04", title: "BUILD", desc: "Full-stack robust engineering execution.", color: "from-pink-500 to-red-500" },
-                  { step: "05", title: "TEST", desc: "QA, penetration & load testing.", color: "from-orange-500 to-yellow-500" },
-                  { step: "06", title: "DEPLOY", desc: "Secure production rollout.", color: "from-green-500 to-emerald-500" },
-                  { step: "07", title: "SUPPORT", desc: "Ongoing SLA & iterative feature scaling.", color: "from-teal-500 to-cyan-500" },
+                  { step: "01", title: "DISCOVER", desc: "Problem mapping & deep domain understanding." },
+                  { step: "02", title: "DEFINE", desc: "Strict requirements & product scoping." },
+                  { step: "03", title: "DESIGN", desc: "Architecture, data models & UX/UI." },
+                  { step: "04", title: "BUILD", desc: "Full-stack robust engineering execution." },
+                  { step: "05", title: "TEST", desc: "QA, penetration & load testing." },
+                  { step: "06", title: "DEPLOY", desc: "Secure production rollout." },
+                  { step: "07", title: "SUPPORT", desc: "Ongoing SLA & iterative feature scaling." },
                 ].map((item, idx) => (
                   <motion.div 
                     key={idx} 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     whileHover="hover"
-                    className="snap-start shrink-0 w-[260px] md:w-[300px] bg-white p-8 rounded-xl border border-gray-100 overflow-visible relative group cursor-pointer h-[280px] flex flex-col justify-between transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-2"
+                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-visible relative group cursor-pointer h-[300px] flex flex-col justify-end transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1"
                   >
                     {/* Hover Connection Line to next card */}
                     {idx < 6 && (
@@ -747,37 +747,45 @@ const App = () => {
                         variants={{ hover: { scaleX: 1, opacity: 1 } }}
                         initial={{ scaleX: 0, opacity: 0 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className={`absolute top-[52px] left-[72px] w-[calc(100%-16px)] h-0.5 bg-gradient-to-r ${item.color} origin-left z-0 pointer-events-none hidden md:block`}
+                        className="absolute top-1/2 left-[50%] w-[calc(100%+24px)] h-0.5 bg-black origin-left z-0 pointer-events-none hidden md:block"
                       />
                     )}
-                    
-                    {/* Coloured top accent line */}
+
+                    {/* Glowing Top Line */}
                     <motion.div 
                       variants={{ hover: { scaleX: 1, opacity: 1 } }}
                       initial={{ scaleX: 0, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: "easeOut" as const }}
-                      className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} origin-left z-20 overflow-hidden rounded-t-xl`}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="absolute top-0 left-0 right-0 h-1.5 bg-black origin-left z-20"
                     />
-                    {/* Step number circle at top — acts as connector node */}
-                    <div className="relative z-10">
-                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-4 relative z-10 ring-4 ring-white group-hover:scale-110 transition-transform duration-300`}>
-                        <span className="text-white text-xs font-black">{item.step}</span>
-                      </div>
-                      <h4 className="text-xl font-black text-black uppercase tracking-tight">{item.title}</h4>
-                    </div>
-                    {/* Watermark */}
+                    
+                    {/* Watermark Number */}
                     <motion.div
-                      variants={{ hover: { scale: 1.1, opacity: 0.04 } }}
-                      initial={{ opacity: 0 }}
+                      variants={{ hover: { scale: 1.1, opacity: 0.05, x: -10, y: 10 } }}
+                      initial={{ scale: 1, opacity: 0, x: 0, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute -bottom-6 -right-4 text-[140px] leading-none font-black text-black select-none pointer-events-none overflow-hidden"
+                      className="absolute -top-6 -right-6 text-[180px] leading-none font-black text-black select-none z-0 pointer-events-none"
                     >
                       {item.step}
                     </motion.div>
-                    {/* Description */}
-                    <p className="text-gray-500 font-medium text-sm relative z-10 group-hover:text-gray-800 transition-colors duration-300">
-                      {item.desc}
-                    </p>
+
+                    {/* Content */}
+                    <div className="relative z-10 w-full bg-white/60 backdrop-blur-sm p-4 -m-4 rounded-xl group-hover:bg-transparent group-hover:backdrop-blur-none transition-all duration-500">
+                      <motion.div 
+                        variants={{ hover: { y: -10 } }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                      >
+                        <span className="text-xl font-bold text-gray-500 block mb-6 transition-colors duration-500 group-hover:text-black">
+                          {item.step}
+                        </span>
+                        <h4 className="text-2xl font-black text-black mb-3 uppercase tracking-tight">
+                          {item.title}
+                        </h4>
+                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-black">
+                          {item.desc}
+                        </p>
+                      </motion.div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
