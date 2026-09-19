@@ -728,7 +728,7 @@ const App = () => {
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     whileHover="hover"
-                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-hidden relative group cursor-pointer h-[300px] flex flex-col justify-end transition-shadow hover:shadow-[0_10px_40px_rgba(255,255,255,0.05)]"
+                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white hover:bg-black p-8 rounded-sm border border-gray-200 hover:border-black overflow-hidden relative group cursor-pointer h-[300px] flex flex-col justify-end transition-all duration-500 hover:shadow-2xl"
                   >
                     {/* Glowing Top Line */}
                     <motion.div 
@@ -740,10 +740,10 @@ const App = () => {
                     
                     {/* Watermark Number */}
                     <motion.div
-                      variants={{ hover: { scale: 1.1, opacity: 0.05, x: -10, y: 10 } }}
+                      variants={{ hover: { scale: 1.1, opacity: 0.1, x: -10, y: 10 } }}
                       initial={{ scale: 1, opacity: 0, x: 0, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute -top-6 -right-6 text-[180px] leading-none font-black text-black select-none z-0 pointer-events-none"
+                      className="absolute -top-6 -right-6 text-[180px] leading-none font-black text-white select-none z-0 pointer-events-none"
                     >
                       {item.step}
                     </motion.div>
@@ -754,13 +754,13 @@ const App = () => {
                         variants={{ hover: { y: -10 } }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
                       >
-                        <span className="text-xl font-bold text-gray-500 block mb-6 transition-colors duration-500 group-hover:text-black">
+                        <span className="text-xl font-bold text-gray-500 block mb-6 transition-colors duration-500 group-hover:text-gray-400">
                           {item.step}
                         </span>
-                        <h4 className="text-2xl font-black text-black mb-3 uppercase tracking-tight">
+                        <h4 className="text-2xl font-black text-black mb-3 uppercase tracking-tight transition-colors duration-500 group-hover:text-white">
                           {item.title}
                         </h4>
-                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-gray-200">
+                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-gray-300">
                           {item.desc}
                         </p>
                       </motion.div>
