@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, Menu, X, Globe, Smartphone, Database, 
-  BrainCircuit, ScanEye, Cpu, CheckCircle2, Target, AtSign
+  BrainCircuit, ScanEye, Cpu, CheckCircle2, Target, AtSign, Linkedin, Instagram, Twitter
 } from 'lucide-react';
 
 import Lenis from '@studio-freight/lenis';
@@ -62,17 +62,17 @@ const App = () => {
         setSubmitStatus(null);
         
         try {
-          const response = await fetch("https://formsubmit.co/ajax/orvantentechnology@gmail.com", {
+          const response = await fetch("https://api.web3forms.com/submit", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
             body: JSON.stringify({
+              access_key: "fce84988-2dfb-4608-a557-388eae66a7fa", // <-- PASTE YOUR KEY HERE
               name: formData.name,
               email: formData.email,
               message: formData.message,
-              _subject: "New Contact Form Submission from Orvanten",
             }),
           });
           
@@ -341,7 +341,7 @@ const App = () => {
           </section>
 
           {/* 3. ABOUT (Light Band) */}
-          <motion.section id="about" className="py-24 md:py-32 bg-gray-50 text-black relative z-20" {...sectionProps}>
+          <motion.section id="about" className="py-16 md:py-24 bg-gray-50 text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
                 ABOUT US
@@ -473,7 +473,7 @@ const App = () => {
           </motion.section>
 
           {/* 5. SERVICES (Light Band) */}
-          <motion.section id="services" className="py-24 md:py-32 bg-white text-black relative z-20" {...sectionProps}>
+          <motion.section id="services" className="py-16 md:py-24 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-16">
                 CORE SERVICES
@@ -704,7 +704,7 @@ const App = () => {
           </motion.section>
 
           {/* 6. OUR APPROACH (Dark Band with Carousel) */}
-          <section className="py-24 md:py-32 bg-gray-50 text-black relative z-20 overflow-hidden">
+          <section className="py-16 md:py-24 bg-gray-50 text-black relative z-20 overflow-hidden">
             <motion.div className="max-w-7xl mx-auto px-6 md:px-12 mb-16" {...sectionProps}>
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
                 THE PROCESS
@@ -773,7 +773,7 @@ const App = () => {
           </section>
 
           {/* 7. WHY WE EXIST */}
-          <motion.section id="why-we-exist" className="py-24 md:py-32 bg-white text-black relative z-20" {...sectionProps}>
+          <motion.section id="why-we-exist" className="py-16 md:py-24 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.div variants={revealUp} className="mb-16">
                 <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-600 mb-4">WHY WE EXIST</h2>
@@ -918,7 +918,7 @@ const App = () => {
           </motion.section>
 
           {/* 8. LEADERSHIP */}
-          <motion.section id="leadership" className="py-24 md:py-32 bg-white text-black relative z-20" {...sectionProps}>
+          <motion.section id="leadership" className="py-16 md:py-24 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <div className="flex justify-between items-end mb-16">
                 <motion.div variants={revealUp}>
@@ -955,7 +955,7 @@ const App = () => {
           </motion.section>
 
           {/* 7. CONTACT */}
-          <motion.section id="contact" className="py-24 md:py-40 bg-white relative z-20" {...sectionProps}>
+          <motion.section id="contact" className="py-16 md:py-24 bg-white relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
                 <motion.div variants={revealUp}>
@@ -978,10 +978,19 @@ const App = () => {
                       <p className="text-xl md:text-2xl font-medium text-black">8778899041 <span className="text-gray-600 mx-2">|</span> 8438439908</p>
                     </div>
                     <div className="group">
-                      <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Social</p>
-                      <a href="https://instagram.com/orvantentech" className="text-xl md:text-2xl font-medium text-black hover:text-gray-600 transition-colors">
-                        @orvantentech
-                      </a>
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Social</p>
+                      <div className="flex items-center gap-8">
+                        <a href="https://linkedin.com/company/orvanten-technology/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors transform hover:scale-110">
+                          <Linkedin size={28} />
+                        </a>
+                        <a href="https://instagram.com/orvantentech" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-600 hover:text-pink-600 transition-colors transform hover:scale-110">
+                          <Instagram size={28} />
+                          <span className="text-xl md:text-2xl font-medium text-black">@orvantentech</span>
+                        </a>
+                        <a href="https://x.com/Orvanten" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors transform hover:scale-110">
+                          <Twitter size={28} />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -1081,9 +1090,17 @@ const App = () => {
                 <p className="text-gray-600 font-bold tracking-widest uppercase text-xs">FROM IDEA → DEVELOPMENT → DEPLOYMENT</p>
               </div>
               <div className="flex flex-col items-center md:items-end gap-6">
-                <a href="https://instagram.com/orvantentech" className="text-gray-600 hover:text-black transition-colors">
-                  <AtSign size={24} />
-                </a>
+                <div className="flex items-center gap-6">
+                  <a href="https://instagram.com/orvantentech" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors">
+                    <Instagram size={24} />
+                  </a>
+                  <a href="https://linkedin.com/company/orvanten-technology/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors">
+                    <Linkedin size={24} />
+                  </a>
+                  <a href="https://x.com/Orvanten" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors">
+                    <Twitter size={24} />
+                  </a>
+                </div>
                 <p className="text-gray-600 font-medium text-sm">
                   © {new Date().getFullYear()} Orvanten Technology. All rights reserved.
                 </p>
