@@ -62,17 +62,17 @@ const App = () => {
         setSubmitStatus(null);
         
         try {
-          const response = await fetch("https://api.web3forms.com/submit", {
+          const response = await fetch("https://formsubmit.co/ajax/orvantentechnology@gmail.com", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
             body: JSON.stringify({
-              access_key: "YOUR_ACCESS_KEY_HERE",
               name: formData.name,
               email: formData.email,
               message: formData.message,
+              _subject: "New Contact Form Submission from Orvanten",
             }),
           });
           
