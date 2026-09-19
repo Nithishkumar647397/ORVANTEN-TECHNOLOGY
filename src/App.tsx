@@ -545,19 +545,19 @@ const App = () => {
                   {activeServiceIdx === 1 && (
                     <motion.div key="s1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
                       {/* Mobile App Animation */}
-                      <div className="w-48 h-80 border-8 border-blue-100 rounded-[2rem] p-1 relative shadow-2xl bg-blue-50 overflow-hidden flex flex-col items-center mb-12">
-                        <div className="w-16 h-4 bg-blue-50 rounded-b-xl absolute top-0 z-10"></div>
-                        <div className="w-full h-full bg-white rounded-2xl relative overflow-hidden">
+                      <div className="w-48 h-80 border-8 border-black rounded-[2rem] p-1 relative shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] bg-white overflow-hidden flex flex-col items-center mb-12">
+                        <div className="w-16 h-4 bg-black rounded-b-xl absolute top-0 z-10"></div>
+                        <div className="w-full h-full bg-white rounded-xl relative overflow-hidden">
                            <motion.div 
                              initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
-                             className="w-full h-full bg-gradient-to-b from-blue-50 to-purple-50 flex flex-col gap-3 p-3 pt-6"
+                             className="w-full h-full bg-gray-50 flex flex-col gap-3 p-3 pt-6"
                            >
-                             <div className="w-full h-24 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-xl shadow-md"></div>
-                             <div className="w-full h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl shadow-sm"></div>
-                             <div className="w-full h-12 bg-gradient-to-r from-indigo-300 to-blue-400 rounded-xl shadow-sm"></div>
+                             <div className="w-full h-24 bg-gray-200 rounded-xl shadow-sm"></div>
+                             <div className="w-full h-12 bg-gray-200 rounded-xl shadow-sm"></div>
+                             <div className="w-full h-12 bg-gray-200 rounded-xl shadow-sm"></div>
                              <div className="flex gap-2">
-                                <div className="w-1/2 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-sm"></div>
-                                <div className="w-1/2 h-16 bg-gradient-to-br from-pink-400 to-red-400 rounded-xl shadow-sm"></div>
+                                <div className="w-1/2 h-16 bg-gray-200 rounded-xl shadow-sm"></div>
+                                <div className="w-1/2 h-16 bg-gray-200 rounded-xl shadow-sm"></div>
                              </div>
                            </motion.div>
                         </div>
