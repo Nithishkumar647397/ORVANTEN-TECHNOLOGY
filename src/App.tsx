@@ -352,29 +352,36 @@ const App = () => {
 
           {/* 3. ABOUT (Light Band) */}
           <motion.section id="about" className="py-10 md:py-16 bg-gray-50 text-black relative z-20" {...sectionProps}>
-            <div className="max-w-7xl mx-auto px-6 md:px-12">
-              <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
-                ABOUT US
-              </motion.h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <motion.div variants={revealUp}>
-                  <p className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-6">
-                    Orvanten Technology is a product-and-services technology company.
-                  </p>
-                  <p className="text-lg text-gray-600 font-medium">
-                    We build our own innovation-driven products, and we partner with businesses and organizations to turn their ideas into real, working technology — from architecture through deployment.
-                  </p>
-                </motion.div>
-                <div className="grid gap-8">
-                  {['Initial Consultation', 'Design & Architecture', 'Agile Development', 'Testing & QA', 'Deployment'].map((item, i) => (
-                    <motion.div key={i} variants={revealUp} className="flex gap-4 items-start">
-                      <div className="text-black mt-1"><CheckCircle2 size={24} strokeWidth={3} /></div>
-                      <div>
-                        <h3 className="text-xl font-black uppercase tracking-tight mb-1">{item}</h3>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+            <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row gap-16">
+              
+              <motion.div variants={revealUp} className="md:w-1/2">
+                <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-12">
+                  ABOUT US
+                </h2>
+                <p className="text-3xl md:text-4xl font-bold leading-tight text-gray-900 mb-6">
+                  Orvanten Technology is a product-and-services technology company.
+                </p>
+                <p className="text-lg text-gray-600 font-medium">
+                  We build our own innovation-driven products, and we partner with businesses and organizations to turn their ideas into real, working technology — from architecture through deployment.
+                </p>
+              </motion.div>
+
+              <div className="md:w-1/2 flex flex-col justify-center gap-10">
+                {[
+                  { title: 'OWN PRODUCTS', desc: 'Developing proprietary platforms that solve real-world problems.' },
+                  { title: 'CLIENT SOLUTIONS', desc: 'Custom engineering tailored to specific business requirements.' },
+                  { title: 'END-TO-END DELIVERY', desc: 'Taking concepts from initial design through to production deployment.' }
+                ].map((item, i) => (
+                  <motion.div key={i} variants={revealUp} className="flex gap-4 items-start">
+                    <div className="text-purple-600 mt-1 shrink-0">
+                      <CheckCircle2 size={28} strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black uppercase tracking-tight mb-2 text-black">{item.title}</h3>
+                      <p className="text-gray-600 font-medium text-lg leading-snug">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </motion.section>
