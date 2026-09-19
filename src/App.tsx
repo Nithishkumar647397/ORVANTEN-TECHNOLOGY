@@ -31,8 +31,6 @@ const TrackingEye = () => {
           <circle cx="50" cy="50" r="6" fill="currentColor" className="scale-50 group-hover:scale-150 transition-transform duration-500 origin-center" />
         </g>
       </svg>
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-white z-20 origin-top transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-b-4 border-blue-200"></div>
-      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white z-20 origin-bottom transform transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-y-0 border-t-4 border-blue-200"></div>
     </div>
   );
 };
@@ -741,18 +739,28 @@ const App = () => {
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     whileHover="hover"
-                    className="snap-start shrink-0 w-[260px] md:w-[300px] bg-white p-8 rounded-xl border border-gray-100 overflow-hidden relative group cursor-pointer h-[280px] flex flex-col justify-between transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-2"
+                    className="snap-start shrink-0 w-[260px] md:w-[300px] bg-white p-8 rounded-xl border border-gray-100 overflow-visible relative group cursor-pointer h-[280px] flex flex-col justify-between transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-2"
                   >
+                    {/* Hover Connection Line to next card */}
+                    {idx < 6 && (
+                      <motion.div 
+                        variants={{ hover: { scaleX: 1, opacity: 1 } }}
+                        initial={{ scaleX: 0, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className={`absolute top-[52px] left-[72px] w-[calc(100%-16px)] h-0.5 bg-gradient-to-r ${item.color} origin-left z-0 pointer-events-none hidden md:block`}
+                      />
+                    )}
+                    
                     {/* Coloured top accent line */}
                     <motion.div 
                       variants={{ hover: { scaleX: 1, opacity: 1 } }}
                       initial={{ scaleX: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease: "easeOut" as const }}
-                      className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} origin-left z-20`}
+                      className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} origin-left z-20 overflow-hidden rounded-t-xl`}
                     />
                     {/* Step number circle at top — acts as connector node */}
                     <div className="relative z-10">
-                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-4`}>
+                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-4 relative z-10 ring-4 ring-white group-hover:scale-110 transition-transform duration-300`}>
                         <span className="text-white text-xs font-black">{item.step}</span>
                       </div>
                       <h4 className="text-xl font-black text-black uppercase tracking-tight">{item.title}</h4>
@@ -762,7 +770,7 @@ const App = () => {
                       variants={{ hover: { scale: 1.1, opacity: 0.04 } }}
                       initial={{ opacity: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute -bottom-6 -right-4 text-[140px] leading-none font-black text-black select-none pointer-events-none"
+                      className="absolute -bottom-6 -right-4 text-[140px] leading-none font-black text-black select-none pointer-events-none overflow-hidden"
                     >
                       {item.step}
                     </motion.div>
