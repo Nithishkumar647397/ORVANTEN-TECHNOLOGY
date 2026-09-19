@@ -926,10 +926,10 @@ const App = () => {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
                 {[
-                  { name: "Nithishkumar S", title: "Founder & CEO", role: "Driving company strategy and business growth.", image: "public/images/nithishkumar.png" },
-                  { name: "Sanjay R", title: "Founder & CTO", role: "Leading technical architecture and product engineering.", image: "public/images/sanjay.png" },
-                  { name: "Hemasundar B", title: "Founder & CPO", role: "Directing product vision and user experience.", image: "public/images/hemasundar.png" },
-                  { name: "Naveen N", title: "Founder & COO", role: "Overseeing operations and service delivery.", image: "public/images/naveen.png" },
+                  { name: "Nithishkumar S", title: "Founder & CEO", role: "Driving company strategy and business growth.", image: "/images/nithishkumar.png" },
+                  { name: "Sanjay R", title: "Founder & CTO", role: "Leading technical architecture and product engineering.", image: "/images/sanjay.png" },
+                  { name: "Hemasundar B", title: "Founder & CPO", role: "Directing product vision and user experience.", image: "/images/hemasundar.png" },
+                  { name: "Naveen N", title: "Founder & COO", role: "Overseeing operations and service delivery.", image: "/images/naveen.png" },
                 ].map((leader, idx) => (
                   <motion.div key={idx} variants={revealUp} whileHover={shouldReduceMotion ? {} : "hover"} className="group cursor-default">
                     <div className="w-full aspect-square bg-gray-50 rounded-3xl mb-8 overflow-hidden border border-gray-200 transition-all duration-500 group-hover:border-gray-500 group-hover:shadow-2xl">
