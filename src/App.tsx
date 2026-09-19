@@ -351,7 +351,7 @@ const App = () => {
           </section>
 
           {/* 3. ABOUT (Light Band) */}
-          <motion.section id="about" className="py-16 md:py-24 bg-gray-50 text-black relative z-20" {...sectionProps}>
+          <motion.section id="about" className="py-10 md:py-16 bg-gray-50 text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
                 ABOUT US
@@ -380,7 +380,7 @@ const App = () => {
           </motion.section>
 
           {/* 4. WHAT WE DO (Products - Dark Band) */}
-          <motion.section id="what-we-do" className="bg-white py-24 md:py-32 relative z-20" {...sectionProps}>
+          <motion.section id="what-we-do" className="bg-white py-10 md:py-16 relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <div id="products">
                 <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none text-black mb-16">
@@ -478,7 +478,7 @@ const App = () => {
           </motion.section>
 
           {/* 5. SERVICES (Light Band) */}
-          <motion.section id="services" className="py-16 md:py-24 bg-white text-black relative z-20" {...sectionProps}>
+          <motion.section id="services" className="py-10 md:py-16 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-16">
                 CORE SERVICES
@@ -709,7 +709,7 @@ const App = () => {
           </motion.section>
 
           {/* 6. OUR APPROACH (Dark Band with Carousel) */}
-          <section className="py-16 md:py-24 bg-gray-50 text-black relative z-20 overflow-hidden">
+          <section className="py-10 md:py-16 bg-gray-50 text-black relative z-20 overflow-hidden">
             <motion.div className="max-w-7xl mx-auto px-6 md:px-12 mb-16" {...sectionProps}>
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
                 THE PROCESS
@@ -778,7 +778,7 @@ const App = () => {
           </section>
 
           {/* 7. WHY WE EXIST */}
-          <motion.section id="why-we-exist" className="py-16 md:py-24 bg-white text-black relative z-20" {...sectionProps}>
+          <motion.section id="why-we-exist" className="py-10 md:py-16 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.div variants={revealUp} className="mb-16">
                 <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-600 mb-4">WHY WE EXIST</h2>
@@ -905,7 +905,7 @@ const App = () => {
             </div>
             
             {/* Philosophy Block */}
-            <div className="w-full bg-black text-white py-20 md:py-28 px-6 md:px-12 text-center gsap-reveal">
+            <div className="w-full bg-black text-white py-12 md:py-16 px-6 md:px-12 text-center gsap-reveal">
               <div className="max-w-5xl mx-auto">
                 <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-12">
                   WE BUILD OUR OWN.<br/>
@@ -923,7 +923,7 @@ const App = () => {
           </motion.section>
 
           {/* 8. LEADERSHIP */}
-          <motion.section id="leadership" className="py-16 md:py-24 bg-white text-black relative z-20" {...sectionProps}>
+          <motion.section id="leadership" className="py-10 md:py-16 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <div className="flex justify-between items-end mb-16">
                 <motion.div variants={revealUp}>
@@ -960,7 +960,7 @@ const App = () => {
           </motion.section>
 
           {/* 7. CONTACT */}
-          <motion.section id="contact" className="py-16 md:py-24 bg-white relative z-20" {...sectionProps}>
+          <motion.section id="contact" className="py-10 md:py-16 bg-white relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
                 <motion.div variants={revealUp}>
