@@ -545,19 +545,19 @@ const App = () => {
                   {activeServiceIdx === 1 && (
                     <motion.div key="s1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
                       {/* Mobile App Animation */}
-                      <div className="w-48 h-80 border-8 border-gray-100 rounded-[2rem] p-1 relative shadow-2xl bg-gray-50 overflow-hidden flex flex-col items-center mb-12">
-                        <div className="w-16 h-4 bg-gray-50 rounded-b-xl absolute top-0 z-10"></div>
+                      <div className="w-48 h-80 border-8 border-blue-100 rounded-[2rem] p-1 relative shadow-2xl bg-blue-50 overflow-hidden flex flex-col items-center mb-12">
+                        <div className="w-16 h-4 bg-blue-50 rounded-b-xl absolute top-0 z-10"></div>
                         <div className="w-full h-full bg-white rounded-2xl relative overflow-hidden">
                            <motion.div 
                              initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
-                             className="w-full h-full bg-gray-50 flex flex-col gap-3 p-3 pt-6"
+                             className="w-full h-full bg-gradient-to-b from-blue-50 to-purple-50 flex flex-col gap-3 p-3 pt-6"
                            >
-                             <div className="w-full h-24 bg-gray-200 rounded-xl"></div>
-                             <div className="w-full h-12 bg-gray-200 rounded-xl"></div>
-                             <div className="w-full h-12 bg-gray-200 rounded-xl"></div>
+                             <div className="w-full h-24 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-xl shadow-md"></div>
+                             <div className="w-full h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl shadow-sm"></div>
+                             <div className="w-full h-12 bg-gradient-to-r from-indigo-300 to-blue-400 rounded-xl shadow-sm"></div>
                              <div className="flex gap-2">
-                                <div className="w-1/2 h-16 bg-gray-200 rounded-xl"></div>
-                                <div className="w-1/2 h-16 bg-gray-200 rounded-xl"></div>
+                                <div className="w-1/2 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-sm"></div>
+                                <div className="w-1/2 h-16 bg-gradient-to-br from-pink-400 to-red-400 rounded-xl shadow-sm"></div>
                              </div>
                            </motion.div>
                         </div>
@@ -716,61 +716,71 @@ const App = () => {
               </motion.h2>
             </motion.div>
             
-            <div className="w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className="flex gap-6 px-6 md:px-12 w-max">
+            {/* Connector line + steps */}
+            <div className="w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 relative">
+              {/* Animated horizontal connector line */}
+              <div className="absolute top-[88px] left-0 right-0 h-px bg-gray-200 z-10 pointer-events-none" style={{ marginLeft: '3rem', marginRight: '3rem' }}>
+                <motion.div
+                  initial={{ scaleX: 0, originX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left"
+                />
+                {/* Moving dot on the line */}
+                <motion.div
+                  animate={{ x: ['0%', '100%'] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear', repeatDelay: 0.5 }}
+                  className="absolute -top-1.5 w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_2px_rgba(59,130,246,0.7)]"
+                />
+              </div>
+
+              <div className="flex gap-6 px-6 md:px-12 w-max pt-16">
                 {[
-                  { step: "01", title: "DISCOVER", desc: "Problem mapping & deep domain understanding." },
-                  { step: "02", title: "DEFINE", desc: "Strict requirements & product scoping." },
-                  { step: "03", title: "DESIGN", desc: "Architecture, data models & UX/UI." },
-                  { step: "04", title: "BUILD", desc: "Full-stack robust engineering execution." },
-                  { step: "05", title: "TEST", desc: "QA, penetration & load testing." },
-                  { step: "06", title: "DEPLOY", desc: "Secure production rollout." },
-                  { step: "07", title: "SUPPORT", desc: "Ongoing SLA & iterative feature scaling." },
+                  { step: "01", title: "DISCOVER", desc: "Problem mapping & deep domain understanding.", color: "from-blue-500 to-indigo-600" },
+                  { step: "02", title: "DEFINE", desc: "Strict requirements & product scoping.", color: "from-indigo-500 to-purple-600" },
+                  { step: "03", title: "DESIGN", desc: "Architecture, data models & UX/UI.", color: "from-purple-500 to-pink-500" },
+                  { step: "04", title: "BUILD", desc: "Full-stack robust engineering execution.", color: "from-pink-500 to-red-500" },
+                  { step: "05", title: "TEST", desc: "QA, penetration & load testing.", color: "from-orange-500 to-yellow-500" },
+                  { step: "06", title: "DEPLOY", desc: "Secure production rollout.", color: "from-green-500 to-emerald-500" },
+                  { step: "07", title: "SUPPORT", desc: "Ongoing SLA & iterative feature scaling.", color: "from-teal-500 to-cyan-500" },
                 ].map((item, idx) => (
                   <motion.div 
                     key={idx} 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     whileHover="hover"
-                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-hidden relative group cursor-pointer h-[300px] flex flex-col justify-end transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1"
+                    className="snap-start shrink-0 w-[260px] md:w-[300px] bg-white p-8 rounded-xl border border-gray-100 overflow-hidden relative group cursor-pointer h-[280px] flex flex-col justify-between transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-2"
                   >
-                    {/* Glowing Top Line */}
+                    {/* Coloured top accent line */}
                     <motion.div 
                       variants={{ hover: { scaleX: 1, opacity: 1 } }}
                       initial={{ scaleX: 0, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="absolute top-0 left-0 right-0 h-1.5 bg-black origin-left z-20"
+                      transition={{ duration: 0.4, ease: "easeOut" as const }}
+                      className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} origin-left z-20`}
                     />
-                    
-                    {/* Watermark Number */}
+                    {/* Step number circle at top — acts as connector node */}
+                    <div className="relative z-10">
+                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-4`}>
+                        <span className="text-white text-xs font-black">{item.step}</span>
+                      </div>
+                      <h4 className="text-xl font-black text-black uppercase tracking-tight">{item.title}</h4>
+                    </div>
+                    {/* Watermark */}
                     <motion.div
-                      variants={{ hover: { scale: 1.1, opacity: 0.05, x: -10, y: 10 } }}
-                      initial={{ scale: 1, opacity: 0, x: 0, y: 0 }}
+                      variants={{ hover: { scale: 1.1, opacity: 0.04 } }}
+                      initial={{ opacity: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute -top-6 -right-6 text-[180px] leading-none font-black text-black select-none z-0 pointer-events-none"
+                      className="absolute -bottom-6 -right-4 text-[140px] leading-none font-black text-black select-none pointer-events-none"
                     >
                       {item.step}
                     </motion.div>
-
-                    {/* Content */}
-                    <div className="relative z-10 w-full">
-                      <motion.div 
-                        variants={{ hover: { y: -10 } }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                      >
-                        <span className="text-xl font-bold text-gray-500 block mb-6 transition-colors duration-500 group-hover:text-black">
-                          {item.step}
-                        </span>
-                        <h4 className="text-2xl font-black text-black mb-3 uppercase tracking-tight">
-                          {item.title}
-                        </h4>
-                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-black">
-                          {item.desc}
-                        </p>
-                      </motion.div>
-                    </div>
+                    {/* Description */}
+                    <p className="text-gray-500 font-medium text-sm relative z-10 group-hover:text-gray-800 transition-colors duration-300">
+                      {item.desc}
+                    </p>
                   </motion.div>
                 ))}
               </div>
