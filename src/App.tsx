@@ -716,26 +716,8 @@ const App = () => {
               </motion.h2>
             </motion.div>
             
-            {/* Connector line + steps */}
             <div className="w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 relative">
-              {/* Animated horizontal connector line */}
-              <div className="absolute top-[88px] left-0 right-0 h-px bg-gray-200 z-10 pointer-events-none" style={{ marginLeft: '3rem', marginRight: '3rem' }}>
-                <motion.div
-                  initial={{ scaleX: 0, originX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.5, ease: "easeInOut" }}
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left"
-                />
-                {/* Moving dot on the line */}
-                <motion.div
-                  animate={{ x: ['0%', '100%'] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'linear', repeatDelay: 0.5 }}
-                  className="absolute -top-1.5 w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_2px_rgba(59,130,246,0.7)]"
-                />
-              </div>
-
-              <div className="flex gap-6 px-6 md:px-12 w-max pt-16">
+              <div className="flex gap-6 px-6 md:px-12 w-max">
                 {[
                   { step: "01", title: "DISCOVER", desc: "Problem mapping & deep domain understanding.", color: "from-blue-500 to-indigo-600" },
                   { step: "02", title: "DEFINE", desc: "Strict requirements & product scoping.", color: "from-indigo-500 to-purple-600" },
