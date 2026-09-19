@@ -194,7 +194,7 @@ const App = () => {
           >
             <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
               <a href="#" className="text-2xl font-black tracking-tight text-black uppercase flex items-center gap-2 group">
-                <div className="w-6 h-6 bg-blue-600 rounded-sm group-hover:rotate-90 transition-transform duration-500"></div>
+                <img src="/logo.png" alt="Orvanten" className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-500" />
                 ORVANTEN
               </a>
               
@@ -741,22 +741,12 @@ const App = () => {
                     whileHover="hover"
                     className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-visible relative group cursor-pointer h-[300px] flex flex-col justify-end transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1"
                   >
-                    {/* Hover Connection Line to next card */}
-                    {idx < 6 && (
-                      <motion.div 
-                        variants={{ hover: { scaleX: 1, opacity: 1 } }}
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="absolute top-1/2 left-[50%] w-[calc(100%+24px)] h-0.5 bg-black origin-left z-0 pointer-events-none hidden md:block"
-                      />
-                    )}
-
-                    {/* Glowing Top Line */}
+                    {/* Top Connecting Line */}
                     <motion.div 
                       variants={{ hover: { scaleX: 1, opacity: 1 } }}
                       initial={{ scaleX: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="absolute top-0 left-0 right-0 h-1.5 bg-black origin-left z-20"
+                      className={`absolute top-0 left-0 h-1.5 bg-black origin-left z-20 ${idx < 6 ? 'w-[calc(100%+24px)]' : 'w-full'}`}
                     />
                     
                     {/* Watermark Number */}
@@ -796,7 +786,9 @@ const App = () => {
           <motion.section id="why-we-exist" className="py-10 md:py-16 bg-white text-black relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <motion.div variants={revealUp} className="mb-16">
-                <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-600 mb-4">WHY WE EXIST</h2>
+                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
+                  WHY WE EXIST
+                </h2>
               </motion.div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-24">
