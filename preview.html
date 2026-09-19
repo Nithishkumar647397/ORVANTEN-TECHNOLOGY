@@ -754,14 +754,14 @@
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     whileHover="hover"
-                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-hidden relative group cursor-pointer h-[300px] flex flex-col justify-end transition-shadow hover:shadow-[0_10px_40px_rgba(255,255,255,0.05)]"
+                    className="snap-start shrink-0 w-[280px] md:w-[350px] bg-white p-8 rounded-sm border border-gray-200 overflow-hidden relative group cursor-pointer h-[300px] flex flex-col justify-end transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1"
                   >
                     {/* Glowing Top Line */}
                     <motion.div 
                       variants={{ hover: { scaleX: 1, opacity: 1 } }}
                       initial={{ scaleX: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="absolute top-0 left-0 right-0 h-1.5 bg-white origin-left z-20"
+                      className="absolute top-0 left-0 right-0 h-1.5 bg-black origin-left z-20"
                     />
                     
                     {/* Watermark Number */}
@@ -786,7 +786,7 @@
                         <h4 className="text-2xl font-black text-black mb-3 uppercase tracking-tight">
                           {item.title}
                         </h4>
-                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-gray-200">
+                        <p className="text-gray-600 font-medium transition-colors duration-500 group-hover:text-black">
                           {item.desc}
                         </p>
                       </motion.div>
