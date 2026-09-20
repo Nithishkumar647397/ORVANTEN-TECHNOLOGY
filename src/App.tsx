@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, Menu, X, Globe, Smartphone, Database, 
-  BrainCircuit, ScanEye, Cpu, CheckCircle2
+  BrainCircuit, ScanEye, Cpu, CheckCircle2, CircuitBoard
 } from 'lucide-react';
 
 const Linkedin = ({ size = 24, className }: { size?: number, className?: string }) => (
@@ -43,8 +43,8 @@ const App = () => {
       const { scrollY } = useScroll();
       
       // Form State
-      const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-      const [formErrors, setFormErrors] = useState({ name: '', email: '', message: '' });
+      const [formData, setFormData] = useState({ name: '', business: '', email: '', phone: '', build: '', message: '' });
+      const [formErrors, setFormErrors] = useState({ name: '', business: '', email: '', phone: '', build: '', message: '' });
       const [isSubmitting, setIsSubmitting] = useState(false);
       const [submitStatus, setSubmitStatus] = useState<string | null>(null); // null | 'success' | 'error'
     
@@ -52,7 +52,7 @@ const App = () => {
         e.preventDefault();
         
         // Validation
-        const errors = { name: '', email: '', message: '' };
+        const errors = { name: '', business: '', email: '', phone: '', build: '', message: '' };
         let isValid = true;
         
         if (!formData.name.trim()) { errors.name = 'Name is required'; isValid = false; }
@@ -70,6 +70,8 @@ const App = () => {
         setSubmitStatus(null);
         
         try {
+          const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+          
           const response = await fetch("https://api.web3forms.com/submit", {
             method: "POST",
             headers: {
@@ -77,9 +79,12 @@ const App = () => {
               Accept: "application/json",
             },
             body: JSON.stringify({
-              access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
+              access_key: accessKey,
               name: formData.name,
+              business: formData.business,
               email: formData.email,
+              phone: formData.phone,
+              build: formData.build,
               message: formData.message,
             }),
           });
@@ -87,7 +92,7 @@ const App = () => {
           const result = await response.json();
           if (result.success) {
             setSubmitStatus('success');
-            setFormData({ name: '', email: '', message: '' });
+            setFormData({ name: '', business: '', email: '', phone: '', build: '', message: '' });
           } else {
             setSubmitStatus('error');
           }
@@ -152,9 +157,9 @@ const App = () => {
 
       const navLinks = [
         { name: 'About', href: '#about' },
-        { name: 'What We Do', href: '#what-we-do' },
         { name: 'Products', href: '#products' },
         { name: 'Services', href: '#services' },
+        { name: 'Process', href: '#process' },
         { name: 'Leadership', href: '#leadership' },
       ];
 
@@ -305,17 +310,27 @@ const App = () => {
                       transition={{ duration: 1, type: "spring", bounce: 0.6, delay: 0.1 }}
                       className="block text-transparent bg-clip-text text-gradient-animate origin-bottom-left"
                     >
-                      BUILDING
+                      WE BUILD
+                    </motion.span>
+                  </div>
+                  <div className="overflow-hidden pb-2">
+                    <motion.span 
+                      initial={{ y: '110%', rotateZ: 5 }} 
+                      animate={{ y: 0, rotateZ: 0 }} 
+                      transition={{ duration: 1, type: "spring", bounce: 0.6, delay: 0.25 }}
+                      className="block text-transparent bg-clip-text text-gradient-animate origin-bottom-left text-[0.8em]"
+                    >
+                      TECHNOLOGY
                     </motion.span>
                   </div>
                   <div className="overflow-hidden pb-4">
                     <motion.span 
                       initial={{ y: '110%', rotateZ: 5 }} 
                       animate={{ y: 0, rotateZ: 0 }} 
-                      transition={{ duration: 1, type: "spring", bounce: 0.6, delay: 0.25 }}
-                      className="block text-transparent bg-clip-text text-gradient-animate origin-bottom-left"
+                      transition={{ duration: 1, type: "spring", bounce: 0.6, delay: 0.4 }}
+                      className="block text-transparent bg-clip-text text-gradient-animate origin-bottom-left text-[0.43em] md:text-[0.45em] whitespace-nowrap tracking-normal"
                     >
-                      THE FUTURE.
+                      THAT SOLVES REAL PROBLEMS.
                     </motion.span>
                   </div>
                 </motion.h1>
@@ -324,24 +339,42 @@ const App = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-                  className="text-xl md:text-2xl text-gray-600 font-medium leading-relaxed max-w-2xl mb-10"
+                  className="text-xl md:text-2xl text-gray-600 font-medium leading-relaxed max-w-3xl mb-10"
                 >
-                  Orvanten Technology designs proprietary innovation and delivers high-end custom engineering — from scalable web platforms to intelligent AI systems.
+                  Orvanten Technology is a product and technology solutions company building our own products and developing custom solutions for businesses, startups and organizations.
                 </motion.p>
                 
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
+                  className="flex flex-col sm:flex-row gap-4 mb-8"
                 >
+                  <a 
+                    href="#contact" 
+                    onClick={(e) => handleScrollTo(e, '#contact')}
+                    className="inline-flex justify-center bg-blue-600 text-white px-8 py-4 text-sm font-bold uppercase tracking-wide hover:bg-blue-700 hover:-translate-y-1 transition-all items-center gap-3 rounded-xl shadow-[0_20px_40px_rgba(37,99,235,0.2)] hover:shadow-[0_20px_60px_rgba(37,99,235,0.4)] group"
+                  >
+                    BUILD WITH US
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
                   <a 
                     href="#products" 
                     onClick={(e) => handleScrollTo(e, '#products')}
-                    className="inline-flex bg-blue-600 text-white px-8 py-4 text-sm font-bold uppercase tracking-wide hover:bg-blue-700 hover:-translate-y-1 transition-all items-center gap-3 rounded-xl shadow-[0_20px_40px_rgba(37,99,235,0.2)] hover:shadow-[0_20px_60px_rgba(37,99,235,0.4)] group"
+                    className="inline-flex justify-center bg-white text-black border border-gray-200 px-8 py-4 text-sm font-bold uppercase tracking-wide hover:bg-gray-50 hover:-translate-y-1 transition-all items-center gap-3 rounded-xl shadow-sm hover:shadow-md group"
                   >
-                    Explore Our Work
+                    EXPLORE OUR PRODUCTS
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </a>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 1 }}
+                  className="text-xs md:text-sm font-bold text-gray-400 tracking-widest uppercase flex flex-wrap gap-x-3 gap-y-2 max-w-4xl"
+                >
+                  <span>AI & ML</span> <span>•</span> <span>AI AGENTS</span> <span>•</span> <span>SOFTWARE</span> <span>•</span> <span>WEB</span> <span>•</span> <span>MOBILE</span> <span>•</span> <span>COMPUTER VISION</span> <span>•</span> <span>IoT</span> <span>•</span> <span>AUTOMATION</span> <span>•</span> <span>HARDWARE</span>
                 </motion.div>
                 
               </div>
@@ -384,13 +417,19 @@ const App = () => {
             </div>
           </motion.section>
 
-          {/* 4. WHAT WE DO (Products - Dark Band) */}
-          <motion.section id="what-we-do" className="bg-white py-10 md:py-16 relative z-20" {...sectionProps}>
+          {/* 4. PRODUCTS (Projects - Dark Band) */}
+          <motion.section id="products" className="bg-white py-10 md:py-16 relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
-              <div id="products">
-                <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none text-black mb-16">
-                  FEATURED PRODUCTS
-                </motion.h2>
+              <div>
+                <motion.div variants={revealUp} className="mb-16">
+                  <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none text-black mb-4">
+                    WHAT WE'VE BEEN BUILDING
+                  </h2>
+                  <p className="text-xl md:text-2xl text-gray-600 font-medium">
+                    From our own products to technology concepts designed to solve real-world problems.
+                  </p>
+                </motion.div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   
                   {/* Product 1: SportIQ */}
@@ -407,6 +446,9 @@ const App = () => {
                         <h3 className="text-3xl font-black text-black uppercase tracking-tight">
                           SPORTIQ
                         </h3>
+                        <span className="px-3 py-1 bg-black text-white text-xs font-bold uppercase tracking-wider rounded-sm shrink-0 self-start">
+                          IN DEVELOPMENT
+                        </span>
                       </div>
                       <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
                         AI-enabled sports ecosystem connecting athletes, coaches, tournament organizers, and government sports bodies.
@@ -428,6 +470,9 @@ const App = () => {
                         <h3 className="text-3xl font-black text-black uppercase tracking-tight">
                           SMARTBUS TN
                         </h3>
+                        <span className="px-3 py-1 bg-black text-white text-xs font-bold uppercase tracking-wider rounded-sm shrink-0 self-start">
+                          IN DEVELOPMENT
+                        </span>
                       </div>
                       <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
                         AI-powered public transport tracking with real-time passenger counting and occupancy insights.
@@ -449,6 +494,9 @@ const App = () => {
                         <h3 className="text-3xl font-black text-black uppercase tracking-tight">
                           SMARTMAINT AI
                         </h3>
+                        <span className="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-bold uppercase tracking-wider rounded-sm shrink-0 self-start">
+                          CONCEPT
+                        </span>
                       </div>
                       <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
                         Failure prediction and equipment monitoring for industrial systems using AI-driven analytics.
@@ -470,6 +518,9 @@ const App = () => {
                         <h3 className="text-3xl font-black text-black uppercase tracking-tight">
                           FIREGUARD ROBOTS
                         </h3>
+                        <span className="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-bold uppercase tracking-wider rounded-sm shrink-0 self-start">
+                          PROTOTYPE
+                        </span>
                       </div>
                       <p className="text-gray-600 group-hover:text-gray-800 font-medium flex-grow text-lg transition-colors duration-500">
                         Robotic systems designed to support fire safety and hazard response in industrial environments.
@@ -499,7 +550,8 @@ const App = () => {
                     { icon: Database, title: "BACKEND SYSTEMS", desc: "Secure APIs, database architecture, and tailored backend systems." },
                     { icon: BrainCircuit, title: "AI & ML", desc: "RAG-based systems, predictive features, and AI integrations." },
                     { icon: ScanEye, title: "COMPUTER VISION", desc: "YOLO detection, analytics, and automated monitoring solutions." },
-                    { icon: Cpu, title: "IoT EMBEDDED", desc: "Sensor/hardware integration tied to intelligent AI pipelines." }
+                    { icon: Cpu, title: "IoT EMBEDDED", desc: "Sensor/hardware integration tied to intelligent AI pipelines." },
+                    { icon: CircuitBoard, title: "HARDWARE", desc: "Custom PCB design, electronics prototyping, and manufacturing." }
                   ].map((service, idx) => {
                     const isActive = activeServiceIdx === idx;
                     return (
@@ -707,6 +759,23 @@ const App = () => {
                       </div>
                     </motion.div>
                   )}
+
+                  {activeServiceIdx === 6 && (
+                    <motion.div key="s6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }} transition={{ duration: 0.4 }} className="flex flex-col items-center w-full max-w-lg">
+                      {/* Hardware Animation */}
+                      <div className="relative w-64 h-64 flex items-center justify-center mb-12">
+                        <div className="w-32 h-32 bg-green-900 border-4 border-green-700 rounded-md relative z-10 flex flex-col items-center justify-center shadow-2xl">
+                          <CircuitBoard size={48} className="text-green-300" />
+                          <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
+                        </div>
+                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: "linear" }} className="absolute inset-0 border-2 border-dashed border-gray-300 rounded-full w-56 h-56 m-auto z-0"></motion.div>
+                      </div>
+                      <div className="text-center">
+                        <h4 className="text-2xl font-black text-black uppercase">HARDWARE</h4>
+                        <p className="text-gray-600 font-medium mt-2">Custom PCB design, electronics prototyping, and manufacturing.</p>
+                      </div>
+                    </motion.div>
+                  )}
                   </AnimatePresence>
                 </div>
               </div>
@@ -714,7 +783,7 @@ const App = () => {
           </motion.section>
 
           {/* 6. OUR APPROACH (Dark Band with Carousel) */}
-          <section className="py-10 md:py-16 bg-gray-50 text-black relative z-20 overflow-hidden">
+          <section id="process" className="py-10 md:py-16 bg-gray-50 text-black relative z-20 overflow-hidden">
             <motion.div className="max-w-7xl mx-auto px-6 md:px-12 mb-16" {...sectionProps}>
               <motion.h2 variants={revealUp} className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
                 THE PROCESS
@@ -781,6 +850,55 @@ const App = () => {
               </div>
             </div>
           </section>
+
+          {/* 6.5 BUILT FOR */}
+          <motion.section id="built-for" className="py-10 md:py-16 bg-white text-black relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <motion.div variants={revealUp} className="mb-16">
+                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-4">
+                  BUILT FOR
+                </h2>
+                <p className="text-xl md:text-2xl text-gray-600 font-medium">
+                  Technology solutions designed around real business and product needs.
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  {
+                    title: "STARTUPS",
+                    desc: "Turn ideas into MVPs, products and scalable technology platforms."
+                  },
+                  {
+                    title: "SMALL & MEDIUM BUSINESSES",
+                    desc: "Digitize operations, customer experiences and business workflows."
+                  },
+                  {
+                    title: "ORGANIZATIONS",
+                    desc: "Build custom technology solutions for specific operational and industry requirements."
+                  },
+                  {
+                    title: "FOUNDERS & ENTREPRENEURS",
+                    desc: "Transform product concepts and business ideas into working technology."
+                  }
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    variants={revealUp}
+                    whileHover={{ y: -5 }}
+                    className="p-8 md:p-10 bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-xl transition-all duration-300 group cursor-default"
+                  >
+                    <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black mb-4 group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 font-medium text-lg">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.section>
 
           {/* 7. WHY WE EXIST */}
           <motion.section id="why-we-exist" className="py-10 md:py-16 bg-white text-black relative z-20" {...sectionProps}>
@@ -902,7 +1020,7 @@ const App = () => {
                         <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-gray-900 group-hover:text-purple-600 transition-colors duration-500">Our Mission</h3>
                       </div>
                       <p className="text-gray-600 text-lg font-medium leading-relaxed group-hover:text-gray-800 transition-colors duration-500">
-                        To transform real-world challenges and ideas into reliable, scalable technology through AI, software, automation, and intelligent systems — while building products of our own and delivering solutions that create value for our clients.
+                        To transform real-world challenges and ideas into reliable, scalable technology through AI, software, hardware, automation and intelligent systems — while building products of our own and delivering practical solutions for our clients.
                       </p>
                     </div>
 
@@ -933,6 +1051,69 @@ const App = () => {
                   ></motion.span>
                   <span>From problems to technology.</span>
                 </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 7.5 WHY WORK WITH US */}
+          <motion.section id="why-work-with-us" className="py-10 md:py-16 bg-gray-50 text-black relative z-20" {...sectionProps}>
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <motion.div variants={revealUp} className="mb-16">
+                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-4">
+                  WHY WORK WITH ORVANTEN?
+                </h2>
+                <p className="text-xl md:text-2xl text-gray-600 font-medium">
+                  From the first requirement to the final solution, we focus on practical technology that solves the actual problem.
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    step: "01",
+                    title: "CLEAR COMMUNICATION",
+                    desc: "Understand requirements clearly and keep communication straightforward."
+                  },
+                  {
+                    step: "02",
+                    title: "DEFINED SCOPE",
+                    desc: "Clear deliverables, milestones and project expectations before development."
+                  },
+                  {
+                    step: "03",
+                    title: "PRACTICAL SOLUTIONS",
+                    desc: "We focus on technology that is useful, maintainable and aligned with the real requirement."
+                  },
+                  {
+                    step: "04",
+                    title: "TRANSPARENT PROCESS",
+                    desc: "Structured development with visibility from discovery to deployment."
+                  },
+                  {
+                    step: "05",
+                    title: "POST-DELIVERY SUPPORT",
+                    desc: "Support, improvements and future scaling after the initial delivery."
+                  }
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    variants={revealUp}
+                    whileHover={{ y: -5 }}
+                    className="p-8 bg-white border border-gray-200 hover:border-gray-300 rounded-xl transition-all duration-300 group cursor-default relative overflow-hidden"
+                  >
+                    <div className="absolute -top-4 -right-4 text-7xl font-black text-gray-100 group-hover:text-blue-50 transition-colors duration-500 z-0 select-none">
+                      {item.step}
+                    </div>
+                    <div className="relative z-10">
+                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-black mb-3">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-600 font-medium">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </motion.section>
@@ -974,16 +1155,18 @@ const App = () => {
             </div>
           </motion.section>
 
+
+
           {/* 7. CONTACT */}
           <motion.section id="contact" className="py-10 md:py-16 bg-white relative z-20" {...sectionProps}>
             <div className="max-w-7xl mx-auto px-6 md:px-12">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
                 <motion.div variants={revealUp}>
-                  <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none text-black mb-8">
-                    CONTACT US.
+                  <h2 className="text-4xl lg:text-6xl font-black uppercase tracking-tighter leading-none text-black mb-6 mt-8 md:mt-0">
+                    HAVE AN IDEA IN MIND?
                   </h2>
-                  <p className="text-2xl md:text-4xl font-bold text-gray-600 mb-12 tracking-tight leading-tight max-w-lg">
-                    Let's build something extraordinary together.
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-600 mb-10 tracking-tight leading-tight max-w-lg">
+                    Tell us what you're trying to build. We'll help turn the idea into a practical technology solution.
                   </p>
                   
                   <div className="space-y-10 mt-12 border-l-4 border-gray-200 pl-8">
@@ -1035,38 +1218,73 @@ const App = () => {
                   ) : (
                     <form className="space-y-8" onSubmit={handleContactSubmit}>
                       <div>
-                        <label htmlFor="name" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Name</label>
+                        <label htmlFor="name" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Name</label>
                         <input 
                           type="text" 
                           id="name" 
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className={`w-full bg-white border-b-2 border-gray-700 px-4 py-4 text-black focus:outline-none focus:ring-0 transition-all ${formErrors.name ? 'border-red-500' : 'focus:border-black'}`}
+                          className={`w-full bg-transparent border-b-2 border-gray-300 px-0 py-3 text-black text-sm md:text-base focus:outline-none focus:ring-0 transition-all ${formErrors.name ? 'border-red-500' : 'focus:border-black'}`}
                           placeholder="ENTER YOUR NAME" 
                         />
                         {formErrors.name && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.name}</p>}
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Email</label>
+                        <label htmlFor="business" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Business / Organization</label>
                         <input 
                           type="text" 
-                          id="email" 
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className={`w-full bg-white border-b-2 border-gray-700 px-4 py-4 text-black focus:outline-none focus:ring-0 transition-all ${formErrors.email ? 'border-red-500' : 'focus:border-black'}`}
-                          placeholder="ENTER YOUR EMAIL" 
+                          id="business" 
+                          value={formData.business}
+                          onChange={(e) => setFormData({ ...formData, business: e.target.value })}
+                          className={`w-full bg-transparent border-b-2 border-gray-300 px-0 py-3 text-black text-sm md:text-base focus:outline-none focus:ring-0 transition-all focus:border-black`}
+                          placeholder="ENTER YOUR BUSINESS OR ORGANIZATION" 
                         />
-                        {formErrors.email && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.email}</p>}
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label htmlFor="email" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Email</label>
+                          <input 
+                            type="text" 
+                            id="email" 
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className={`w-full bg-transparent border-b-2 border-gray-300 px-0 py-3 text-black text-sm md:text-base focus:outline-none focus:ring-0 transition-all ${formErrors.email ? 'border-red-500' : 'focus:border-black'}`}
+                            placeholder="ENTER YOUR EMAIL" 
+                          />
+                          {formErrors.email && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.email}</p>}
+                        </div>
+                        <div>
+                          <label htmlFor="phone" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Phone / WhatsApp</label>
+                          <input 
+                            type="text" 
+                            id="phone" 
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className={`w-full bg-transparent border-b-2 border-gray-300 px-0 py-3 text-black text-sm md:text-base focus:outline-none focus:ring-0 transition-all focus:border-black`}
+                            placeholder="ENTER YOUR PHONE NUMBER" 
+                          />
+                        </div>
                       </div>
                       <div>
-                        <label htmlFor="message" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Message</label>
+                        <label htmlFor="build" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">What do you want to build?</label>
+                        <input 
+                          type="text" 
+                          id="build" 
+                          value={formData.build}
+                          onChange={(e) => setFormData({ ...formData, build: e.target.value })}
+                          className={`w-full bg-transparent border-b-2 border-gray-300 px-0 py-3 text-black text-sm md:text-base focus:outline-none focus:ring-0 transition-all focus:border-black`}
+                          placeholder="E.G., WEB APP, IOT SYSTEM, AI PLATFORM" 
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="message" className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Message</label>
                         <textarea 
                           id="message" 
                           rows={4} 
                           value={formData.message}
                           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          className={`w-full bg-white border-b-2 border-gray-700 px-4 py-4 text-black focus:outline-none focus:ring-0 transition-all resize-none ${formErrors.message ? 'border-red-500' : 'focus:border-black'}`}
-                          placeholder="TELL US ABOUT YOUR PROJECT"
+                          className={`w-full bg-transparent border-b-2 border-gray-300 px-0 py-3 text-black text-sm md:text-base focus:outline-none focus:ring-0 transition-all resize-none ${formErrors.message ? 'border-red-500' : 'focus:border-black'}`}
+                          placeholder="TELL US MORE ABOUT YOUR PROJECT REQUIREMENTS"
                         ></textarea>
                         {formErrors.message && <p className="text-red-500 text-xs font-bold mt-2">{formErrors.message}</p>}
                       </div>
@@ -1082,11 +1300,11 @@ const App = () => {
                         whileTap={isSubmitting ? {} : { scale: 0.98 }}
                         disabled={isSubmitting}
                         type="submit" 
-                        className={`w-full text-black px-6 py-5 font-bold uppercase tracking-widest transition-colors mt-8 flex items-center justify-center gap-3 ${isSubmitting ? 'bg-gray-600 cursor-not-allowed' : 'bg-white hover:bg-gray-200'}`}
+                        className={`w-full text-white px-6 py-5 font-bold uppercase tracking-widest transition-colors mt-8 flex items-center justify-center gap-3 ${isSubmitting ? 'bg-gray-600 cursor-not-allowed' : 'bg-black hover:bg-gray-800'}`}
                       >
                         {isSubmitting ? (
                           <>
-                            <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
