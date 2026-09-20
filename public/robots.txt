@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://orvantentechnology.com/sitemap.xml
+Sitemap: https://orvanten-technology.vercel.app/sitemap.xml
