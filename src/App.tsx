@@ -72,21 +72,25 @@ const App = () => {
         try {
           const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
           
+          const payload = {
+            access_key: accessKey,
+            name: formData.name,
+            business: formData.business,
+            email: formData.email,
+            phone: formData.phone,
+            build: formData.build,
+            message: formData.message,
+          };
+          
+          console.log("Web3Forms Payload:", payload);
+          
           const response = await fetch("https://api.web3forms.com/submit", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-            body: JSON.stringify({
-              access_key: accessKey,
-              name: formData.name,
-              business: formData.business,
-              email: formData.email,
-              phone: formData.phone,
-              build: formData.build,
-              message: formData.message,
-            }),
+            body: JSON.stringify(payload),
           });
           
           const result = await response.json();
